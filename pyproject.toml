@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "finance-ai-research-agent"
+version = "0.1.0"
+description = "A multi-agent investment research desk that argues a stock from every side and refuses to give you a rating."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "Kanzen" }]
+keywords = ["llm", "agents", "multi-agent", "investing", "research", "anthropic"]
+dependencies = [
+    "anthropic>=0.40.0",
+    "python-dotenv>=1.0.0",
+    "yfinance>=0.2.40",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+finance-research = "research_firm.cli:main"
+
+[tool.setuptools]
+packages = ["research_firm"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
