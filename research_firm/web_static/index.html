@@ -51,6 +51,18 @@ h1{font-family:'Fraunces',serif;font-size:30px;font-weight:500;letter-spacing:-.
 .bar button{background:var(--blue-deep);color:#fbf6ea;border:none;border-radius:14px;padding:0 22px;font-family:inherit;font-weight:600;font-size:14px;cursor:pointer;box-shadow:var(--shadow);transition:.15s;white-space:nowrap}
 .bar button:hover{background:#54707f}.bar button:disabled{opacity:.55;cursor:default}
 .hint{font-size:12px;color:var(--ink-3);margin:0 0 0 4px}.hint b{color:var(--ink-2);font-weight:600;cursor:pointer}.hint b:hover{color:var(--blue-deep)}
+.resolved{font-size:12.5px;color:var(--ink-2);margin:7px 0 0 4px;min-height:1px}.resolved b{color:var(--ink);font-weight:600}
+
+/* ticker autocomplete */
+.ac-wrap{position:relative;flex:1;display:flex}
+.ac-wrap-sm{position:relative;display:inline-flex}
+.ac-pop{position:absolute;top:calc(100% + 6px);left:0;z-index:40;min-width:300px;max-width:440px;background:var(--surface);border:1px solid var(--hair);border-radius:13px;box-shadow:var(--shadow);overflow:hidden;display:none}
+.ac-pop.show{display:block}
+.ac-item{display:flex;align-items:baseline;gap:10px;padding:10px 13px;cursor:pointer}
+.ac-item.sel,.ac-item:hover{background:var(--surface-2)}
+.ac-item .ac-sym{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;color:var(--ink);min-width:62px}
+.ac-item .ac-nm{font-size:12.5px;color:var(--ink-2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ac-item .ac-ex{font-size:11px;color:var(--ink-4);white-space:nowrap}
 
 .notice{display:none;align-items:center;gap:9px;background:var(--warn-soft);border:1px solid var(--warn);border-radius:13px;padding:11px 14px;margin:18px 0 4px;font-size:13px;color:var(--ink);font-weight:500;max-width:680px}
 .notice.show{display:flex}.notice .dot{width:8px;height:8px;border-radius:50%;background:var(--warn);flex:none}
@@ -197,10 +209,11 @@ footer b{color:var(--ink-2);font-weight:600}footer a{color:var(--blue-deep);text
 <!-- ============ RESEARCH ============ -->
 <section class="tab-panel on" data-tab="research">
   <div class="bar">
-    <input id="ticker" placeholder="Enter a ticker…" maxlength="8" autocomplete="off" spellcheck="false" aria-label="Stock ticker">
+    <div class="ac-wrap"><input id="ticker" placeholder="Search a ticker or company…" maxlength="40" autocomplete="off" spellcheck="false" aria-label="Stock ticker or company name"></div>
     <button id="run">Hold the meeting</button>
   </div>
   <div class="hint">Try <b data-t="AAPL">AAPL</b> · <b data-t="NVDA">NVDA</b> · <b data-t="MSFT">MSFT</b></div>
+  <div class="resolved" id="resolved"></div>
 
   <div class="notice" id="notice"><span class="dot"></span><span id="notice-text"></span></div>
 
@@ -254,7 +267,7 @@ footer b{color:var(--ink-2);font-weight:600}footer a{color:var(--blue-deep);text
   <div class="col"><div class="panel-cap">Book</div>
   <div class="panel-sub">Positions you hold. Per-holding figures only — never a portfolio score.</div></div>
   <form class="hold-form" id="hold-form">
-    <input class="f-tk" id="h-ticker" placeholder="TICKER" maxlength="8" autocomplete="off" spellcheck="false" aria-label="Holding ticker">
+    <span class="ac-wrap-sm"><input class="f-tk" id="h-ticker" placeholder="TICKER" maxlength="40" autocomplete="off" spellcheck="false" aria-label="Holding ticker"></span>
     <input class="f-n" id="h-shares" type="number" step="any" min="0" placeholder="shares" aria-label="Shares">
     <input class="f-n" id="h-cost" type="number" step="any" min="0" placeholder="cost / sh" aria-label="Cost per share">
     <button type="submit">Add</button>
@@ -664,10 +677,62 @@ function start(){
 }
 function finish(){ if(es){ es.close(); es = null; } runBtn.disabled = false; runBtn.textContent = "Hold the meeting"; }
 
+// ---------- ticker autocomplete (search / resolve name -> symbol / validate by picking) ----------
+function attachAutocomplete(inp, onPick){
+  const wrap = inp.closest(".ac-wrap, .ac-wrap-sm") || inp.parentElement;
+  const pop = document.createElement("div"); pop.className = "ac-pop"; wrap.appendChild(pop);
+  let items = [], sel = -1, timer = null, lastReq = 0;
+  const close = () => { pop.classList.remove("show"); pop.replaceChildren(); items = []; sel = -1; };
+  function draw(){
+    pop.replaceChildren();
+    if(!items.length){ close(); return; }
+    items.forEach((it, i) => {
+      const row = document.createElement("div"); row.className = "ac-item" + (i === sel ? " sel" : "");
+      const s = document.createElement("span"); s.className = "ac-sym"; s.textContent = it.symbol;
+      const n = document.createElement("span"); n.className = "ac-nm"; n.textContent = it.name || "";
+      const e = document.createElement("span"); e.className = "ac-ex"; e.textContent = it.exchange || "";
+      row.append(s, n, e);
+      row.addEventListener("mousedown", (ev) => { ev.preventDefault(); choose(i); });
+      pop.appendChild(row);
+    });
+    pop.classList.add("show");
+  }
+  function choose(i){ const it = items[i]; if(!it) return; inp.value = it.symbol; close(); onPick(it.symbol, it.name || ""); }
+  async function run(){
+    const q = inp.value.trim();
+    if(q.length < 2){ close(); return; }
+    const my = ++lastReq;
+    try{
+      const r = await fetch("/api/search?q=" + encodeURIComponent(q));
+      const d = await r.json();
+      if(my !== lastReq) return;                 // a newer keystroke already fired
+      items = d.results || []; sel = -1; draw();
+    }catch(_){ close(); }
+  }
+  inp.addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(run, 220); });
+  inp.addEventListener("keydown", (e) => {
+    if(!pop.classList.contains("show") || !items.length) return;
+    if(e.key === "ArrowDown"){ e.preventDefault(); sel = (sel + 1) % items.length; draw(); }
+    else if(e.key === "ArrowUp"){ e.preventDefault(); sel = (sel - 1 + items.length) % items.length; draw(); }
+    else if(e.key === "Enter" && sel >= 0){ e.preventDefault(); e.stopImmediatePropagation(); choose(sel); }
+    else if(e.key === "Escape"){ close(); }
+  }, true);                                       // capture so Enter-to-pick beats Enter-to-run
+  inp.addEventListener("blur", () => setTimeout(close, 150));
+}
+function setResolved(sym, name){
+  const rz = $("resolved"); rz.replaceChildren();
+  if(!name) return;
+  rz.append(document.createTextNode(sym + " · "));
+  const b = document.createElement("b"); b.textContent = name; rz.append(b);
+}
+
 // ---------- wiring ----------
 document.querySelectorAll(".tab").forEach((t) => t.addEventListener("click", () => showTab(t.dataset.tab)));
 runBtn.addEventListener("click", start);
+input.addEventListener("input", () => setResolved("", ""));
 input.addEventListener("keydown", (e) => { if(e.key === "Enter") start(); });
+attachAutocomplete(input, (sym, name) => { setResolved(sym, name); input.focus(); });
+attachAutocomplete($("h-ticker"), () => { $("h-shares").focus(); });
 document.querySelectorAll(".hint b").forEach((b) => b.addEventListener("click", () => { input.value = b.dataset.t; start(); }));
 $("star").addEventListener("click", () => { toggleList("watch", curTicker, { name: curProfile.name }); updateStar(); updateTriage(); });
 $("tri-watch").addEventListener("click", () => { toggleList("watch", curTicker, { name: curProfile.name }); updateStar(); updateTriage(); });

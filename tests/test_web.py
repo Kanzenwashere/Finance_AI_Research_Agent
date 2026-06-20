@@ -67,6 +67,16 @@ def test_keyless_request_serves_cached_run(monkeypatch):
         assert vm["available"] is True and vm["value_low"] <= vm["value_high"]
 
 
+def test_search_endpoint(monkeypatch):
+    web._SEARCH_CACHE.clear()
+    monkeypatch.setattr(web, "_yahoo_search",
+                        lambda q: [{"symbol": "AAPL", "name": "Apple Inc.", "exchange": "NASDAQ"}])
+    with TestClient(web.app) as client:
+        assert client.get("/api/search?q=a").json()["results"] == []   # too short -> no upstream call
+        body = client.get("/api/search?q=apple").json()
+        assert body["results"][0] == {"symbol": "AAPL", "name": "Apple Inc.", "exchange": "NASDAQ"}
+
+
 def test_empty_ticker_is_handled(monkeypatch):
     monkeypatch.setattr(web, "_REPLAY_DELAY", 0.0)
     with TestClient(web.app) as client:

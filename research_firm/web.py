@@ -97,6 +97,34 @@ def _client_ip(request: Request) -> str:
     return request.client.host if request.client else "unknown"
 
 
+# --------------------------------------------------------------------------- ticker search
+# A small symbol-search over Yahoo (the same source as the snapshot) so the inputs can autocomplete
+# and resolve a name to a ticker. It's free (not the model), but cached so a public page can't hammer
+# the upstream, and fully graceful — any failure just returns no matches and the box stays usable.
+_SEARCH_CACHE: dict[str, list[dict[str, Any]]] = {}
+
+
+def _yahoo_search(q: str) -> list[dict[str, Any]]:
+    try:
+        import yfinance as yf
+        quotes = yf.Search(q, max_results=8).quotes or []
+    except Exception:  # noqa: BLE001 — search is best-effort; never let it raise to the request
+        return []
+    out: list[dict[str, Any]] = []
+    for it in quotes:
+        if it.get("quoteType") not in ("EQUITY", "ETF"):
+            continue
+        sym = it.get("symbol")
+        if not sym:
+            continue
+        out.append({"symbol": sym,
+                    "name": it.get("longname") or it.get("shortname") or "",
+                    "exchange": it.get("exchDisp") or ""})
+        if len(out) >= 7:
+            break
+    return out
+
+
 # --------------------------------------------------------------------------- SSE helpers
 def _sse(event: str, data: dict[str, Any]) -> str:
     return f"event: {event}\ndata: {json.dumps(data, ensure_ascii=False)}\n\n"
@@ -193,6 +221,22 @@ async def _run_live(ticker: str, model: str):
 @app.get("/health")
 async def health() -> JSONResponse:
     return JSONResponse({"ok": True, "model": DEFAULT_MODEL})
+
+
+@app.get("/api/search")
+async def search(q: str = "") -> JSONResponse:
+    """Autocomplete a ticker or company name -> a few {symbol, name, exchange} matches."""
+    q = (q or "").strip()
+    if len(q) < 2:
+        return JSONResponse({"results": []})
+    key = q.lower()
+    cached = _SEARCH_CACHE.get(key)
+    if cached is None:
+        cached = await asyncio.to_thread(_yahoo_search, q)
+        if len(_SEARCH_CACHE) > 256:   # keep the cache bounded on a long-running process
+            _SEARCH_CACHE.clear()
+        _SEARCH_CACHE[key] = cached
+    return JSONResponse({"results": cached})
 
 
 @app.get("/")
