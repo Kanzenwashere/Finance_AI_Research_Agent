@@ -22,8 +22,10 @@ from research_firm.analysts import BEAR, DESK, Analyst
 # Sonnet by default: a meeting fans out to several analyst calls plus the bear, so the mid-tier
 # is a deliberate cost choice. Override per call with hold_meeting(model=...).
 DEFAULT_MODEL = "claude-sonnet-4-6"
-DEFAULT_MAX_TOKENS = 500
-DEFAULT_TIMEOUT = 60  # seconds per analyst call
+# The mandates target a ~700-token case but tell the analyst to reserve room for its closing line;
+# this cap leaves a comfortable buffer so even the longest seat (the Bear) lands its close.
+DEFAULT_MAX_TOKENS = 1100
+DEFAULT_TIMEOUT = 90  # seconds per analyst call (longer replies need a touch more time)
 
 
 @dataclass
