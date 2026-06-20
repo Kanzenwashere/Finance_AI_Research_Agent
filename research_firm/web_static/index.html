@@ -618,8 +618,25 @@ function updateTriage(){
 
 // ---------- book ----------
 const getHoldings = () => LS.get(HOLD_KEY, []);
+// One row per ticker: adding a name you already hold merges into it (shares sum, cost weight-averages).
+function collapseHoldings(h){
+  const out = [];
+  for(const row of h){
+    const ex = out.find((x) => x.ticker === row.ticker);
+    if(!ex){ out.push({ ticker: row.ticker, shares: row.shares, cost: row.cost }); continue; }
+    const exS = ex.shares, s = row.shares, exC = ex.cost, c = row.cost;
+    const ns = (exS != null || s != null) ? (exS || 0) + (s || 0) : null;
+    ex.shares = ns;
+    ex.cost = (exC != null && c != null && ns) ? ((exS || 0) * exC + (s || 0) * c) / ns
+            : (exC != null ? exC : c);
+  }
+  return out;
+}
 function renderHoldings(){
-  const h = getHoldings(), meta = LS.get(META_KEY, {}), tbl = $("hold-table");
+  let h = getHoldings();
+  const collapsed = collapseHoldings(h);
+  if(collapsed.length !== h.length){ h = collapsed; LS.set(HOLD_KEY, h); }   // clean any existing dupes
+  const meta = LS.get(META_KEY, {}), tbl = $("hold-table");
   tbl.replaceChildren();
   if(!h.length){
     const e = document.createElement("div"); e.className = "empty";
@@ -659,7 +676,7 @@ $("hold-form").addEventListener("submit", (e) => {
   const shares = parseFloat($("h-shares").value), cost = parseFloat($("h-cost").value);
   const h = getHoldings();
   h.push({ ticker: t, shares: isNaN(shares) ? null : shares, cost: isNaN(cost) ? null : cost });
-  LS.set(HOLD_KEY, h);
+  LS.set(HOLD_KEY, collapseHoldings(h));   // merge into an existing position instead of duplicating
   $("h-ticker").value = ""; $("h-shares").value = ""; $("h-cost").value = "";
   renderHoldings(); refreshCounts();
 });
