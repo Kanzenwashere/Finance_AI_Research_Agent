@@ -74,6 +74,15 @@ Type a ticker; analyst cards stream in over Server-Sent Events, the Bear lands l
 "no verdict" banner. With **no `ANTHROPIC_API_KEY` set**, the page still works — it serves a saved
 example run, so you can see the UI without spending anything.
 
+The page also keeps a few things in your browser (`localStorage` only — no account, no server
+storage):
+
+- **Watchlist** — ⭐ any ticker to pin it to a rail; click to re-run its meeting.
+- **Holdings** — track positions and see per-holding value and naive cost-basis gain/loss. It
+  reviews each holding on its own and deliberately **never scores, rates, or ranks the portfolio**.
+- **Share a run** — encode a completed meeting into the URL (`#…`) for a paste-able, backend-free
+  link that replays the exact debate. Shared content renders as inert text, never executed.
+
 ## Deploy your own
 
 It runs anywhere that can serve a FastAPI app. The repo ships a `Procfile`, a `requirements.txt`,

@@ -32,6 +32,7 @@
   --down-soft:#ecdcc6;
   --warn:#c79a5a;        /* honey */
   --warn-soft:#ecdcbc;
+  --gold:#c79a5a;        /* watchlist star */
 
   --shadow:0 1px 2px rgba(74,67,52,.05),0 4px 14px rgba(74,67,52,.06);
   --r:18px;
@@ -52,8 +53,19 @@ h1{font-family:'Fraunces',serif;font-size:34px;font-weight:500;letter-spacing:-.
 .tagline{font-size:14.5px;color:var(--ink-2);max-width:60ch}
 .tagline b{color:var(--ink);font-weight:600}
 
+/* ---------- watchlist rail ---------- */
+.railwrap{display:none;align-items:center;gap:9px;flex-wrap:wrap;margin:0 0 4px}
+.rail-cap{font-size:11px;letter-spacing:.5px;text-transform:uppercase;font-weight:600;color:var(--ink-3)}
+.rail{display:flex;gap:7px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:7px;background:var(--surface-2);border:1px solid var(--hair);
+  border-radius:11px;padding:5px 8px 5px 11px;font-family:'IBM Plex Mono',monospace;font-size:12px;
+  font-weight:500;color:var(--ink-2);cursor:pointer;transition:.15s}
+.chip:hover{border-color:var(--blue);color:var(--ink)}
+.chip .x{color:var(--ink-4);font-family:'IBM Plex Sans',sans-serif;font-size:13px;line-height:1;cursor:pointer;padding:0 1px}
+.chip .x:hover{color:var(--down)}
+
 /* ---------- search bar ---------- */
-.bar{display:flex;gap:10px;margin:24px 0 6px}
+.bar{display:flex;gap:10px;margin:18px 0 6px}
 .bar input{flex:1;background:var(--surface);border:1px solid var(--hair);color:var(--ink);
   border-radius:14px;padding:13px 15px;font-family:'IBM Plex Mono',monospace;font-size:16px;
   font-weight:500;letter-spacing:1px;text-transform:uppercase;box-shadow:var(--shadow)}
@@ -68,6 +80,49 @@ h1{font-family:'Fraunces',serif;font-size:34px;font-weight:500;letter-spacing:-.
 .hint b{color:var(--ink-2);font-weight:600;cursor:pointer}
 .hint b:hover{color:var(--blue-deep)}
 
+/* ---------- holdings panel ---------- */
+.holdings{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);margin:14px 0 0;overflow:hidden}
+.holdings summary{cursor:pointer;list-style:none;padding:13px var(--pad);font-weight:600;font-size:13px;
+  color:var(--ink-2);display:flex;align-items:center;gap:8px}
+.holdings summary::-webkit-details-marker{display:none}
+.holdings summary::before{content:"▸";color:var(--ink-3);font-size:11px;transition:.15s}
+.holdings[open] summary::before{transform:rotate(90deg)}
+.holdings summary .hcount{color:var(--ink-3);font-weight:500}
+.hold-body{padding:2px var(--pad) 16px}
+.hold-form{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.hold-form input{background:var(--bg);border:1px solid var(--hair);border-radius:10px;padding:8px 10px;
+  font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink)}
+.hold-form input:focus{outline:none;border-color:var(--blue)}
+.hold-form .f-tk{width:92px;text-transform:uppercase}
+.hold-form .f-n{width:84px}
+.hold-form button{background:var(--blue-deep);color:#fbf6ea;border:none;border-radius:10px;padding:8px 14px;
+  font-family:inherit;font-weight:600;font-size:13px;cursor:pointer}
+.hold-form button:hover{background:#54707f}
+.hrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 0;border-top:1px solid var(--hair-soft);font-size:13px}
+.hrow .h-tk{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--ink);min-width:52px}
+.hrow .h-pos{color:var(--ink-3);font-size:12.5px}
+.hrow .h-now{font-family:'IBM Plex Mono',monospace;color:var(--ink-2)}
+.hrow .h-val{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--ink);margin-left:auto}
+.hrow .h-gain{font-family:'IBM Plex Mono',monospace;font-size:12.5px;min-width:62px;text-align:right}
+.hrow .h-gain.up{color:var(--up)}.hrow .h-gain.down{color:var(--down)}
+.hrow .h-review{background:var(--surface-2);border:1px solid var(--hair);border-radius:9px;padding:4px 10px;
+  font-family:inherit;font-size:12px;font-weight:600;color:var(--ink-2);cursor:pointer}
+.hrow .h-review:hover{border-color:var(--blue);color:var(--ink)}
+.hrow .h-x{background:none;border:none;color:var(--ink-4);font-size:14px;cursor:pointer;padding:0 2px}
+.hrow .h-x:hover{color:var(--down)}
+.h-total{display:flex;justify-content:space-between;padding:11px 0 2px;margin-top:4px;border-top:1.5px solid var(--hair);
+  font-size:13px;font-weight:600;color:var(--ink)}
+.h-total .v{font-family:'IBM Plex Mono',monospace}
+.hold-empty{color:var(--ink-3);font-size:13px;padding:6px 0 2px;line-height:1.5}
+.hold-note{font-size:11.5px;color:var(--ink-4);margin-top:12px;line-height:1.5}
+
+/* ---------- shared-snapshot banner ---------- */
+.snapbanner{display:none;align-items:center;justify-content:space-between;gap:12px;background:var(--blue-soft);
+  border:1px solid var(--blue);border-radius:13px;padding:11px 14px;margin:18px 0 4px;font-size:13px;color:var(--ink);font-weight:500}
+.snapbanner.show{display:flex}
+.snapbanner button{background:var(--blue-deep);color:#fbf6ea;border:none;border-radius:10px;padding:7px 12px;
+  font-family:inherit;font-weight:600;font-size:12px;cursor:pointer;white-space:nowrap}
+
 /* ---------- notices ---------- */
 .notice{display:none;align-items:center;gap:9px;background:var(--warn-soft);
   border:1px solid var(--warn);border-radius:13px;padding:11px 14px;margin:18px 0 4px;
@@ -77,9 +132,13 @@ h1{font-family:'Fraunces',serif;font-size:34px;font-weight:500;letter-spacing:-.
 
 /* ---------- profile strip ---------- */
 .profile{display:none;background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);
-  padding:16px var(--pad);margin:20px 0 6px;align-items:baseline;gap:12px;flex-wrap:wrap}
+  padding:16px var(--pad);margin:20px 0 6px;align-items:baseline;gap:10px;flex-wrap:wrap}
 .profile.show{display:flex}
 .profile .tk{font-family:'Fraunces',serif;font-size:22px;font-weight:600}
+.profile .star{background:none;border:none;cursor:pointer;font-size:18px;line-height:1;color:var(--ink-4);
+  padding:0;align-self:center;transition:.15s}
+.profile .star.on{color:var(--gold)}
+.profile .star:hover{transform:scale(1.15)}
 .profile .nm{font-size:14px;color:var(--ink-2);font-weight:500}
 .profile .px{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:500}
 .profile .meta{flex-basis:100%;font-size:12px;color:var(--ink-3);margin-top:2px}
@@ -93,7 +152,7 @@ h1{font-family:'Fraunces',serif;font-size:34px;font-weight:500;letter-spacing:-.
 .card .role{display:flex;align-items:center;gap:9px;margin-bottom:9px}
 .card .role .name{font-family:'Fraunces',serif;font-size:17px;font-weight:600;letter-spacing:-.2px}
 .card .role .job{font-size:11.5px;color:var(--ink-3);font-weight:500}
-.card .body{font-size:14.5px;color:var(--ink-2);line-height:1.62}
+.card .body{font-size:14.5px;color:var(--ink-2);line-height:1.62;white-space:pre-wrap}
 .card.err .body{color:var(--ink-3);font-style:italic}
 .card.bull{border-left-color:var(--up)}
 .card.valuation{border-left-color:var(--blue)}
@@ -116,6 +175,9 @@ h1{font-family:'Fraunces',serif;font-size:34px;font-weight:500;letter-spacing:-.
 .verdict.show{display:block}
 .verdict .big{font-family:'Fraunces',serif;font-size:22px;font-weight:500;letter-spacing:-.3px}
 .verdict .sub{font-size:13px;color:var(--ink-3);margin-top:7px}
+.verdict .share{display:none;margin:16px auto 0;background:var(--surface-2);border:1px solid var(--hair);
+  border-radius:11px;padding:8px 16px;font-family:inherit;font-weight:600;font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s}
+.verdict .share:hover{border-color:var(--blue);color:var(--ink)}
 
 footer{margin-top:34px;font-size:12px;color:var(--ink-3);line-height:1.6}
 footer b{color:var(--ink-2);font-weight:600}
@@ -132,6 +194,11 @@ footer a:hover{text-decoration:underline}
     apart. You get the strongest case each way, and <b>never a rating</b>. The call stays yours.</p>
 </header>
 
+<div class="railwrap" id="railwrap">
+  <span class="rail-cap">★ Watchlist</span>
+  <div class="rail" id="rail"></div>
+</div>
+
 <div class="bar">
   <input id="ticker" placeholder="Enter a ticker…" maxlength="8" autocomplete="off"
          spellcheck="false" aria-label="Stock ticker">
@@ -139,10 +206,31 @@ footer a:hover{text-decoration:underline}
 </div>
 <div class="hint">Try <b data-t="AAPL">AAPL</b> · <b data-t="NVDA">NVDA</b> · <b data-t="MSFT">MSFT</b></div>
 
+<details class="holdings" id="holdings">
+  <summary>Your holdings <span class="hcount" id="hold-count"></span></summary>
+  <div class="hold-body">
+    <form class="hold-form" id="hold-form">
+      <input class="f-tk" id="h-ticker" placeholder="TICKER" maxlength="8" autocomplete="off" spellcheck="false" aria-label="Holding ticker">
+      <input class="f-n" id="h-shares" type="number" step="any" min="0" placeholder="shares" aria-label="Shares">
+      <input class="f-n" id="h-cost" type="number" step="any" min="0" placeholder="cost / sh" aria-label="Cost per share">
+      <button type="submit">Add</button>
+    </form>
+    <div id="hold-table"></div>
+    <div class="hold-note">Per-holding figures only. This reviews each position on its own and shows
+      naive cost-basis math — it never scores, rates, or ranks your portfolio. Not investment advice.</div>
+  </div>
+</details>
+
+<div class="snapbanner" id="snapbanner">
+  <span>Viewing a shared snapshot — not a live run.</span>
+  <button id="snap-clear">Run your own →</button>
+</div>
+
 <div class="notice" id="notice"><span class="dot"></span><span id="notice-text"></span></div>
 
 <div class="profile" id="profile">
   <span class="tk mono" id="p-tk"></span>
+  <button class="star" id="star" title="Add to watchlist" aria-label="Toggle watchlist">☆</button>
   <span class="nm" id="p-nm"></span>
   <span class="px mono" id="p-px"></span>
   <span class="meta" id="p-meta"></span>
@@ -153,6 +241,7 @@ footer a:hover{text-decoration:underline}
 <div class="verdict" id="verdict">
   <div class="big serif">No verdict. No rating.</div>
   <div class="sub" id="verdict-sub">The strongest case each way is above — the decision is yours.</div>
+  <button class="share" id="share">Copy share link</button>
 </div>
 
 <footer>
@@ -170,24 +259,38 @@ const JOBS = {
   Bear: "fed the bull + valuation, told to attack",
 };
 const ORDER = ["Bull", "Valuation", "Macro", "Checklist"];
+const WATCH_KEY = "far_watch", HOLD_KEY = "far_holdings", PX_KEY = "far_px";
+const WATCH_MAX = 12;
 
 const $ = (id) => document.getElementById(id);
 const input = $("ticker"), runBtn = $("run"), cards = $("cards");
 const profile = $("profile"), notice = $("notice"), verdict = $("verdict");
-let es = null;
+let es = null;          // active EventSource
+let current = null;     // the meeting object assembled from the live stream (for sharing)
+let curTicker = "";     // ticker currently on screen
+let mode = "live";      // "live" | "shared"
 
-function fmtPrice(p){
-  if(p.price == null) return "";
-  const cur = p.currency && p.currency !== "USD" ? " " + p.currency : "";
-  return "$" + Number(p.price).toLocaleString(undefined,{maximumFractionDigits:2}) + cur;
+// ---------- tiny localStorage wrapper (everything user-specific lives in the browser, no DB) ----------
+const LS = {
+  get(k, d){ try{ const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; }catch(_){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(_){} },
+};
+const cleanTicker = (t) => (t || "").toUpperCase().replace(/[^A-Z0-9.\-]/g, "").slice(0, 8);
+
+function money(n, cur){
+  if(n == null || isNaN(n)) return "";
+  const c = cur && cur !== "USD" ? " " + cur : "";
+  return "$" + Number(n).toLocaleString(undefined, {maximumFractionDigits:2, minimumFractionDigits:2}) + c;
 }
 
+// ---------- render helpers shared by live + replay ----------
 function reset(){
   if(es){ es.close(); es = null; }
   cards.innerHTML = "";
   profile.classList.remove("show");
   notice.classList.remove("show");
   verdict.classList.remove("show");
+  $("share").style.display = "none";
 }
 
 function cardFor(name){
@@ -201,42 +304,222 @@ function cardFor(name){
   return el;
 }
 
+// `name` is always one of our fixed seats; `view`/`error` may be untrusted (shared link), so the
+// body goes in via textContent — never innerHTML — which makes script/tag injection impossible.
 function fillCard(name, view, error){
   const el = cardFor(name);
   el.className = "card " + name.toLowerCase() + (error ? " err" : "");
-  const job = JOBS[name] || "";
-  const body = error
-    ? "Unavailable — " + error
-    : (view || "").replace(/&/g,"&amp;").replace(/</g,"&lt;");
-  el.innerHTML =
-    '<div class="role"><span class="name serif">' + name + '</span>' +
-    '<span class="job">' + job + '</span></div>' +
-    '<div class="body">' + body + '</div>';
+  const role = document.createElement("div"); role.className = "role";
+  const nm = document.createElement("span"); nm.className = "name serif"; nm.textContent = name;
+  const job = document.createElement("span"); job.className = "job"; job.textContent = JOBS[name] || "";
+  role.append(nm, job);
+  const body = document.createElement("div"); body.className = "body";
+  body.textContent = error ? ("Unavailable — " + error) : (view || "");
+  el.replaceChildren(role, body);
 }
 
 function pendingCard(name){
   const el = cardFor(name);
   el.className = "card pending " + name.toLowerCase();
-  el.innerHTML =
-    '<div class="role"><span class="name serif">' + name + '</span>' +
-    '<span class="job">' + (JOBS[name]||"") + '</span></div>' +
-    '<div class="body dots"><span></span><span></span><span></span></div>';
+  const role = document.createElement("div"); role.className = "role";
+  const nm = document.createElement("span"); nm.className = "name serif"; nm.textContent = name;
+  const job = document.createElement("span"); job.className = "job"; job.textContent = JOBS[name] || "";
+  role.append(nm, job);
+  const dots = document.createElement("div"); dots.className = "body dots";
+  dots.innerHTML = "<span></span><span></span><span></span>";
+  el.replaceChildren(role, dots);
 }
 
-function showNotice(text){
-  $("notice-text").textContent = text;
-  notice.classList.add("show");
+function showNotice(text){ $("notice-text").textContent = text; notice.classList.add("show"); }
+
+function renderProfile(p){
+  curTicker = cleanTicker(p.ticker || curTicker);
+  $("p-tk").textContent = curTicker;
+  $("p-nm").textContent = p.name || "";
+  $("p-px").textContent = money(p.price, p.currency);
+  $("p-meta").textContent = [p.sector, p.industry].filter(Boolean).join(" · ");
+  profile.classList.add("show");
+  updateStar();
 }
 
-function start(){
-  const t = (input.value || "").trim().toUpperCase();
+// ---------- watchlist ----------
+const getWatch = () => LS.get(WATCH_KEY, []);
+const inWatch = (t) => getWatch().some((w) => w.ticker === t);
+
+function updateStar(){
+  const on = inWatch(curTicker);
+  const s = $("star");
+  s.textContent = on ? "★" : "☆";
+  s.classList.toggle("on", on);
+  s.title = on ? "Remove from watchlist" : "Add to watchlist";
+}
+
+function toggleWatch(t, meta){
+  t = cleanTicker(t);
   if(!t) return;
+  const w = getWatch();
+  const i = w.findIndex((x) => x.ticker === t);
+  if(i >= 0) w.splice(i, 1);
+  else w.unshift({ ticker: t, name: (meta && meta.name) || "", ts: Date.now() });
+  LS.set(WATCH_KEY, w.slice(0, WATCH_MAX));
+  renderRail();
+  updateStar();
+}
+
+function renderRail(){
+  const w = getWatch();
+  $("railwrap").style.display = w.length ? "flex" : "none";
+  const rail = $("rail");
+  rail.replaceChildren();
+  w.forEach((item) => {
+    const chip = document.createElement("span");
+    chip.className = "chip";
+    const lab = document.createElement("span");
+    lab.textContent = item.ticker;
+    lab.title = item.name || item.ticker;
+    lab.addEventListener("click", () => { input.value = item.ticker; start(); });
+    const x = document.createElement("span");
+    x.className = "x"; x.textContent = "✕"; x.title = "Remove";
+    x.addEventListener("click", (e) => { e.stopPropagation(); toggleWatch(item.ticker); });
+    chip.append(lab, x);
+    rail.appendChild(chip);
+  });
+}
+
+// ---------- portfolio (per-row arithmetic only — never aggregates into a rating) ----------
+const getHoldings = () => LS.get(HOLD_KEY, []);
+
+function renderHoldings(){
+  const h = getHoldings();
+  $("hold-count").textContent = h.length ? "(" + h.length + ")" : "";
+  const px = LS.get(PX_KEY, {});
+  const tbl = $("hold-table");
+  tbl.replaceChildren();
+  if(!h.length){
+    const e = document.createElement("div");
+    e.className = "hold-empty";
+    e.textContent = "No holdings yet. Add a ticker to track a position — this reviews each one on its own, it never scores your portfolio.";
+    tbl.appendChild(e);
+    return;
+  }
+  let total = 0, haveTotal = false;
+  h.forEach((row, i) => {
+    const cached = px[row.ticker];
+    const price = cached ? cached.price : null;
+    const cur = cached ? cached.currency : null;
+    const value = (row.shares != null && price != null) ? row.shares * price : null;
+    if(value != null){ total += value; haveTotal = true; }
+    const gainPct = (price != null && row.cost != null && row.cost > 0)
+      ? ((price - row.cost) / row.cost * 100) : null;
+
+    const r = document.createElement("div"); r.className = "hrow";
+    const tk = document.createElement("span"); tk.className = "h-tk"; tk.textContent = row.ticker;
+    const pos = document.createElement("span"); pos.className = "h-pos";
+    pos.textContent = (row.shares != null ? row.shares + " sh" : "—")
+      + (row.cost != null ? " @ " + money(row.cost, cur) : "");
+    const now = document.createElement("span"); now.className = "h-now";
+    now.textContent = price != null ? "→ " + money(price, cur) : "→ run to price";
+    r.append(tk, pos, now);
+
+    const val = document.createElement("span"); val.className = "h-val";
+    val.textContent = value != null ? money(value, cur) : "";
+    r.append(val);
+    const g = document.createElement("span");
+    g.className = "h-gain" + (gainPct != null ? (gainPct >= 0 ? " up" : " down") : "");
+    g.textContent = gainPct != null ? (gainPct >= 0 ? "+" : "") + gainPct.toFixed(1) + "%" : "";
+    r.append(g);
+
+    const rev = document.createElement("button"); rev.className = "h-review"; rev.textContent = "Review";
+    rev.addEventListener("click", () => { input.value = row.ticker; $("holdings").open = false; start(); });
+    const x = document.createElement("button"); x.className = "h-x"; x.textContent = "✕"; x.title = "Remove";
+    x.addEventListener("click", () => { const a = getHoldings(); a.splice(i, 1); LS.set(HOLD_KEY, a); renderHoldings(); });
+    r.append(rev, x);
+    tbl.appendChild(r);
+  });
+  if(haveTotal){
+    const t = document.createElement("div"); t.className = "h-total";
+    const lab = document.createElement("span"); lab.textContent = "Total of priced holdings";
+    const v = document.createElement("span"); v.className = "v"; v.textContent = money(total);
+    t.append(lab, v);
+    tbl.appendChild(t);
+  }
+}
+
+$("hold-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const t = cleanTicker($("h-ticker").value);
+  if(!t) return;
+  const shares = parseFloat($("h-shares").value);
+  const cost = parseFloat($("h-cost").value);
+  const h = getHoldings();
+  h.push({ ticker: t, shares: isNaN(shares) ? null : shares, cost: isNaN(cost) ? null : cost });
+  LS.set(HOLD_KEY, h);
+  $("h-ticker").value = ""; $("h-shares").value = ""; $("h-cost").value = "";
+  renderHoldings();
+});
+
+// ---------- share / replay (stateless: the whole meeting rides in the URL #hash, no backend) ----------
+function encodeMeeting(m){
+  const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(m))));
+  return b64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+function decodeMeeting(s){
+  s = s.replace(/-/g, "+").replace(/_/g, "/");
+  return JSON.parse(decodeURIComponent(escape(atob(s))));
+}
+
+$("share").addEventListener("click", () => {
+  if(!current) return;
+  const code = encodeMeeting(current);
+  if(code.length > 20000){ showNotice("This run is a little large to share by link."); return; }
+  const url = location.origin + location.pathname + "#m=" + code;
+  const flash = () => { const b = $("share"); const o = b.textContent; b.textContent = "Link copied ✓"; setTimeout(() => (b.textContent = o), 1800); };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(flash).catch(() => { location.hash = "#m=" + code; window.prompt("Copy this share link:", url); });
+  } else { location.hash = "#m=" + code; window.prompt("Copy this share link:", url); }
+});
+
+function replayMeeting(m){
+  mode = "shared";
   reset();
+  current = m;
+  renderProfile(m.profile && typeof m.profile === "object" ? m.profile : { ticker: m.ticker });
+  ORDER.forEach((name) => {
+    if(m.views && typeof m.views[name] === "string") fillCard(name, m.views[name], null);
+    else if(m.errors && typeof m.errors[name] === "string") fillCard(name, null, m.errors[name]);
+  });
+  if(typeof m.bear === "string") fillCard("Bear", m.bear, null);
+  else if(typeof m.bear_error === "string") fillCard("Bear", null, m.bear_error);
+  verdict.classList.add("show");
+  $("share").style.display = "block";
+  $("snapbanner").classList.add("show");
+}
+
+function tryReplayFromHash(){
+  const h = location.hash || "";
+  if(!h.startsWith("#m=")) return false;
+  let m;
+  try { m = decodeMeeting(h.slice(3)); } catch(_){ return false; }
+  if(!m || typeof m !== "object" || !m.ticker) return false;
+  replayMeeting(m);
+  return true;
+}
+
+// ---------- the live run ----------
+function start(){
+  const t = cleanTicker(input.value);
+  if(!t) return;
+  if(mode === "shared"){
+    mode = "live";
+    $("snapbanner").classList.remove("show");
+    if(location.hash) history.replaceState(null, "", location.pathname + location.search);
+  }
+  reset();
+  current = null;
+  curTicker = t;
   runBtn.disabled = true;
   runBtn.textContent = "Meeting in session…";
-
-  // Show the desk as pending placeholders so the room feels alive while calls run.
-  ORDER.forEach(pendingCard);
+  ORDER.forEach(pendingCard);   // placeholders so the room feels alive while calls run
 
   es = new EventSource("/api/meeting?ticker=" + encodeURIComponent(t));
 
@@ -247,22 +530,26 @@ function start(){
 
   es.addEventListener("profile", (e) => {
     const p = JSON.parse(e.data);
-    $("p-tk").textContent = p.ticker || t;
-    $("p-nm").textContent = p.name || "";
-    $("p-px").textContent = fmtPrice(p);
-    const bits = [p.sector, p.industry].filter(Boolean).join(" · ");
-    $("p-meta").textContent = bits;
-    profile.classList.add("show");
+    renderProfile(p);
+    current = { ticker: curTicker, profile: p, views: {}, errors: {}, bear: null, bear_error: null };
+    if(p.price != null){   // remember the last live price so the holdings table can value this ticker
+      const px = LS.get(PX_KEY, {});
+      px[curTicker] = { price: p.price, currency: p.currency || null, ts: Date.now() };
+      LS.set(PX_KEY, px);
+      renderHoldings();
+    }
   });
 
   es.addEventListener("analyst", (e) => {
     const d = JSON.parse(e.data);
     fillCard(d.name, d.view, d.error);
+    if(current){ if(d.error) current.errors[d.name] = d.error; else current.views[d.name] = d.view; }
   });
 
   es.addEventListener("bear", (e) => {
     const d = JSON.parse(e.data);
     fillCard("Bear", d.view, d.error);
+    if(current){ current.bear = d.view || null; current.bear_error = d.error || null; }
   });
 
   es.addEventListener("error_msg", (e) => {
@@ -271,13 +558,12 @@ function start(){
   });
 
   es.addEventListener("done", (e) => {
-    try { $("verdict-sub").textContent = JSON.parse(e.data).note || $("verdict-sub").textContent; }
-    catch(_){}
+    try { $("verdict-sub").textContent = JSON.parse(e.data).note || $("verdict-sub").textContent; } catch(_){}
     verdict.classList.add("show");
+    if(current) $("share").style.display = "block";
     finish();
   });
 
-  // Network/stream error (not a server "error" event) — close and re-enable.
   es.onerror = () => { if(es && es.readyState === 2) finish(); };
 }
 
@@ -287,12 +573,22 @@ function finish(){
   runBtn.textContent = "Hold the meeting";
 }
 
+// ---------- wiring ----------
 runBtn.addEventListener("click", start);
 input.addEventListener("keydown", (e) => { if(e.key === "Enter") start(); });
 document.querySelectorAll(".hint b").forEach((b) => {
   b.addEventListener("click", () => { input.value = b.dataset.t; start(); });
 });
-input.focus();
+$("star").addEventListener("click", () => {
+  const p = (current && current.profile) || {};
+  toggleWatch(curTicker, { name: p.name });
+});
+$("snap-clear").addEventListener("click", () => { location.hash = ""; location.reload(); });
+window.addEventListener("hashchange", () => { tryReplayFromHash(); });
+
+renderRail();
+renderHoldings();
+if(!tryReplayFromHash()) input.focus();
 </script>
 </body>
 </html>
