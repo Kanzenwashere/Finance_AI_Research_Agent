@@ -64,6 +64,12 @@ h1{font-family:'Fraunces',serif;font-size:30px;font-weight:500;letter-spacing:-.
 .ac-item .ac-nm{font-size:12.5px;color:var(--ink-2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ac-item .ac-ex{font-size:11px;color:var(--ink-4);white-space:nowrap}
 
+/* saved-research banner (no tokens spent) */
+.saved-note{display:none;align-items:center;justify-content:space-between;gap:12px;background:var(--blue-soft);border:1px solid var(--blue);border-radius:13px;padding:11px 15px;margin:18px 0 0;font-size:13px;color:var(--ink);font-weight:500;max-width:680px}
+.saved-note.show{display:flex}
+.saved-note button{background:var(--blue-deep);color:#fbf6ea;border:none;border-radius:10px;padding:7px 13px;font-family:inherit;font-weight:600;font-size:12.5px;cursor:pointer;white-space:nowrap}
+.saved-note button:hover{background:#54707f}
+
 .notice{display:none;align-items:center;gap:9px;background:var(--warn-soft);border:1px solid var(--warn);border-radius:13px;padding:11px 14px;margin:18px 0 4px;font-size:13px;color:var(--ink);font-weight:500;max-width:680px}
 .notice.show{display:flex}.notice .dot{width:8px;height:8px;border-radius:50%;background:var(--warn);flex:none}
 
@@ -223,6 +229,11 @@ footer b{color:var(--ink-2);font-weight:600}footer a{color:var(--blue-deep);text
     <span class="nm" id="p-nm"></span>
     <span class="px mono" id="p-px"></span>
     <span class="meta" id="p-meta"></span>
+  </div>
+
+  <div class="saved-note" id="saved-note">
+    <span id="saved-text"></span>
+    <button id="saved-fresh">Run a fresh meeting ↻</button>
   </div>
 
   <div class="seclabel" id="desk-label">
@@ -427,6 +438,7 @@ function reset(){
   $("desk").replaceChildren(); $("reader").replaceChildren();
   $("bear-host").replaceChildren(); $("bear-reader").replaceChildren();
   $("desk-label").style.display = "none"; $("bear-label").style.display = "none";
+  $("saved-note").classList.remove("show");
   profile.classList.remove("show"); notice.classList.remove("show"); verdict.classList.remove("show");
 }
 const tileHost = (name) => name === "Bear" ? $("bear-host") : $("desk");
@@ -493,6 +505,41 @@ function setMemo(name, view, error){
   renderTile(name);
   if(openName === name) renderReader(name);
 }
+
+// ---------- saved meetings (so re-opening a researched stock costs no tokens) ----------
+const MEETINGS_KEY = "far_meetings", MEETINGS_MAX = 24;
+function saveMeeting(t){
+  if(!t) return;
+  const all = LS.get(MEETINGS_KEY, {});
+  all[t] = { profile: curProfile, memos: memos, valuation_model: valModel, ts: Date.now() };
+  const keys = Object.keys(all);
+  if(keys.length > MEETINGS_MAX){
+    keys.sort((a, b) => (all[a].ts || 0) - (all[b].ts || 0));
+    keys.slice(0, keys.length - MEETINGS_MAX).forEach((k) => delete all[k]);
+  }
+  LS.set(MEETINGS_KEY, all);
+}
+function relativeTime(ts){
+  if(!ts) return "earlier";
+  const s = Math.max(0, Math.floor((Date.now() - ts) / 1000));
+  if(s < 90) return "just now";
+  const m = Math.floor(s / 60); if(m < 60) return m + " min ago";
+  const h = Math.floor(m / 60); if(h < 24) return h + (h === 1 ? " hour ago" : " hours ago");
+  const d = Math.floor(h / 24); return d + (d === 1 ? " day ago" : " days ago");
+}
+function restoreMeeting(t){
+  const all = LS.get(MEETINGS_KEY, {}), m = all[t];
+  if(!m) return false;
+  reset();
+  curTicker = t; curProfile = m.profile || { ticker: t }; valModel = m.valuation_model || null; memos = m.memos || {};
+  renderProfile(curProfile);
+  $("desk-label").style.display = "flex"; $("bear-label").style.display = "flex";
+  ORDER.forEach(renderTile); renderTile("Bear");
+  $("saved-text").textContent = "Saved research · " + relativeTime(m.ts) + " · no tokens used";
+  $("saved-note").classList.add("show");
+  updateTriage(); verdict.classList.add("show");
+  return true;
+}
 function showNotice(text){ $("notice-text").textContent = text; notice.classList.add("show"); }
 function renderProfile(p){
   curTicker = cleanTicker(p.ticker || curTicker);
@@ -528,7 +575,7 @@ function refreshCounts(){
   $("n-radar").textContent = getList("radar").length || "";
   $("n-book").textContent = getHoldings().length || "";
 }
-function researchTicker(t){ showTab("research"); input.value = t; start(); }
+function researchTicker(t){ showTab("research"); input.value = t; setResolved("", ""); if(!restoreMeeting(t)) start(); }
 function renderList(kind){
   const host = kind === "watch" ? $("watch-list") : $("radar-list");
   const items = getList(kind), meta = LS.get(META_KEY, {});
@@ -659,11 +706,12 @@ function start(){
   const t = cleanTicker(input.value); if(!t) return;
   reset();
   curTicker = t; valModel = null;
+  let wasCached = false;   // don't save a rate-limited / keyless fallback as this ticker's research
   runBtn.disabled = true; runBtn.textContent = "Meeting in session…";
   $("desk-label").style.display = "flex"; $("bear-label").style.display = "flex";
   ORDER.forEach(renderTile); renderTile("Bear");
   es = new EventSource("/api/meeting?ticker=" + encodeURIComponent(t));
-  es.addEventListener("meta", (e) => { const d = JSON.parse(e.data); if(d.cached) showNotice(d.note || "Showing a saved run."); });
+  es.addEventListener("meta", (e) => { const d = JSON.parse(e.data); if(d.cached){ wasCached = true; showNotice(d.note || "Showing a saved run."); } });
   es.addEventListener("profile", (e) => { renderProfile(JSON.parse(e.data)); });
   es.addEventListener("valuation_model", (e) => { valModel = JSON.parse(e.data); renderTile("Valuation"); if(openName === "Valuation") renderReader("Valuation"); });
   es.addEventListener("analyst", (e) => { const d = JSON.parse(e.data); setMemo(d.name, d.view, d.error); });
@@ -671,6 +719,7 @@ function start(){
   es.addEventListener("error_msg", (e) => { showNotice(JSON.parse(e.data).message || "Something went wrong."); });
   es.addEventListener("done", (e) => {
     try { $("verdict-sub").textContent = JSON.parse(e.data).note || $("verdict-sub").textContent; } catch(_){}
+    if(!wasCached) saveMeeting(curTicker);   // remember it so re-opening costs no tokens
     updateTriage(); verdict.classList.add("show"); finish();
   });
   es.onerror = () => { if(es && es.readyState === 2) finish(); };
@@ -732,7 +781,11 @@ runBtn.addEventListener("click", start);
 input.addEventListener("input", () => setResolved("", ""));
 input.addEventListener("keydown", (e) => { if(e.key === "Enter") start(); });
 attachAutocomplete(input, (sym, name) => { setResolved(sym, name); input.focus(); });
-attachAutocomplete($("h-ticker"), () => { $("h-shares").focus(); });
+attachAutocomplete($("h-ticker"), (sym, name) => {
+  if(name){ const meta = LS.get(META_KEY, {}); meta[sym] = { ...(meta[sym] || {}), name }; LS.set(META_KEY, meta); }
+  $("h-shares").focus();
+});
+$("saved-fresh").addEventListener("click", () => { $("saved-note").classList.remove("show"); start(); });
 document.querySelectorAll(".hint b").forEach((b) => b.addEventListener("click", () => { input.value = b.dataset.t; start(); }));
 $("star").addEventListener("click", () => { toggleList("watch", curTicker, { name: curProfile.name }); updateStar(); updateTriage(); });
 $("tri-watch").addEventListener("click", () => { toggleList("watch", curTicker, { name: curProfile.name }); updateStar(); updateTriage(); });
