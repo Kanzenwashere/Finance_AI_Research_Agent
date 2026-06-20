@@ -64,22 +64,29 @@ finance-research --json TSLA > meeting.json
 The desk streams in as each analyst lands, then the bear makes its case, then a
 "no rating — your call" line. Nothing tells you what to do.
 
-**As a local web app** — the same debate, streamed live to a single cream page:
+**As a local web app** — a small tabbed workspace around the same engine, streamed live over
+Server-Sent Events:
 
 ```bash
 uvicorn research_firm.web:app --reload      # then open http://localhost:8000
 ```
 
-Type a ticker; analyst cards stream in over Server-Sent Events, the Bear lands last, and you get a
-"no verdict" banner. With **no `ANTHROPIC_API_KEY` set**, the page still works — it serves a saved
-example run, so you can see the UI without spending anything.
+- **Research** — search by ticker *or* company name (autocomplete), run the desk, and read each
+  analyst as a compact card you expand into its full memo. The Valuation card leads with a real
+  **discounted-cash-flow model** — an intrinsic-value range, the assumptions, and a sensitivity
+  grid. Then the Bear, then a "no verdict" banner. Send a name to your Watchlist or Radar in a tap.
+- **Watchlist / Radar** — two saved lists (committed vs. still-weighing). Re-opening a stock you've
+  already researched restores the saved memos instantly — **no tokens spent** — with a button to
+  run a fresh meeting when you want one.
+- **Book** — track holdings; each prices itself from the market feed (no meeting needed) and shows
+  per-position value and naive cost-basis gain/loss. It reviews each holding on its own and
+  deliberately **never scores, rates, or ranks the portfolio**.
+- **Balance** — a plain description of your book's sector mix. No concentration score, no risk
+  rating, no rebalancing advice.
 
-The page also keeps a few things in your browser (`localStorage` only — no account, no server
-storage):
-
-- **Watchlist** — ⭐ any ticker to pin it to a rail; click to re-run its meeting.
-- **Holdings** — track positions and see per-holding value and naive cost-basis gain/loss. It
-  reviews each holding on its own and deliberately **never scores, rates, or ranks the portfolio**.
+Everything user-specific lives in your browser (`localStorage` only — no account, no server
+storage). With **no `ANTHROPIC_API_KEY` set**, the page still works — it serves a saved example run
+so you can see the UI without spending anything.
 
 ## Deploy your own
 
@@ -118,7 +125,7 @@ print("BEAR:", meeting.bear)
 | Analyst | Job |
 | --- | --- |
 | **Bull** | the strongest evidence-based case *for* owning it |
-| **Valuation** | cheap or expensive, and what's priced in |
+| **Valuation** | runs a real DCF and gives an intrinsic-value *range* — never a single target |
 | **Macro** | the sector / rates / cycle backdrop — tailwind, neutral, or headwind |
 | **Checklist** | a short PASS / FLAG / FAIL due-diligence gate |
 | **Bear** | runs last, fed the bull + valuation, and attacks them |
@@ -136,6 +143,9 @@ Live market context (price, multiples, business summary) is pulled from Yahoo Fi
   rebuttal attacks the actual argument, not a strawman.
 - **No synthesis.** The engine never collapses the debate into a rating or target; `Meeting` has
   no `verdict` field on purpose.
+- **Real valuation.** The Valuation analyst reasons over a clean-room two-stage discounted-cash-flow
+  model — whole-company: project free cash flow, discount at a CAPM-based WACC, terminal value, net
+  out debt — that outputs an intrinsic-value *range* (a sensitivity grid), not a single number.
 - **Resilient.** One analyst failing — an API error or a malformed reply — is captured in its
   slot and never sinks the meeting; the bear still runs on whoever produced a view.
 - **One call.** `hold_meeting(ticker) -> Meeting`, with a CLI on top and hermetic tests around it.
