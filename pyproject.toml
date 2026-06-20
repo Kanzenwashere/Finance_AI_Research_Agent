@@ -18,13 +18,17 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0"]
+web = ["fastapi>=0.110", "uvicorn[standard]>=0.27"]
+dev = ["pytest>=8.0", "fastapi>=0.110", "httpx>=0.27"]
 
 [project.scripts]
 finance-research = "research_firm.cli:main"
 
 [tool.setuptools]
 packages = ["research_firm"]
+
+[tool.setuptools.package-data]
+research_firm = ["web_static/*.html", "examples/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finance AI Research Agent</title>
+<meta name="description" content="A multi-agent research desk that argues a stock from every side — and refuses to give you a rating.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* ---------- warm cream palette ---------- */
+  --bg:#ece2cf;          /* warm cream base */
+  --surface:#f7efdd;     /* lighter cream card */
+  --surface-2:#e3d7bf;   /* sunken cream */
+  --hair:#ddd0b4;
+  --hair-soft:#e6dcc4;
+
+  --blue:#7f99ac;        /* soft slate-blue accent */
+  --blue-deep:#5f7d92;
+  --blue-soft:#e4ddca;
+
+  --ink:#4a4334;         /* warm espresso text */
+  --ink-2:#766c57;
+  --ink-3:#a39a82;
+  --ink-4:#c4b89c;
+
+  --up:#7a9b6f;          /* soft olive-sage */
+  --up-soft:#e6e0c8;
+  --down:#bd9079;        /* warm clay — the bear */
+  --down-soft:#ecdcc6;
+  --warn:#c79a5a;        /* honey */
+  --warn-soft:#ecdcbc;
+
+  --shadow:0 1px 2px rgba(74,67,52,.05),0 4px 14px rgba(74,67,52,.06);
+  --r:18px;
+  --pad:22px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--ink)}
+body{font-family:'IBM Plex Sans',-apple-system,sans-serif;font-size:15px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;max-width:720px;margin:0 auto;min-height:100vh;padding:34px 20px 90px}
+.serif{font-family:'Fraunces',Georgia,serif}
+.mono{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums}
+.dim{color:var(--ink-3)}
+
+/* ---------- header ---------- */
+header{margin-bottom:22px}
+.eyebrow{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;color:var(--ink-3);margin-bottom:9px}
+h1{font-family:'Fraunces',serif;font-size:34px;font-weight:500;letter-spacing:-.5px;line-height:1.08;margin-bottom:8px}
+.tagline{font-size:14.5px;color:var(--ink-2);max-width:60ch}
+.tagline b{color:var(--ink);font-weight:600}
+
+/* ---------- search bar ---------- */
+.bar{display:flex;gap:10px;margin:24px 0 6px}
+.bar input{flex:1;background:var(--surface);border:1px solid var(--hair);color:var(--ink);
+  border-radius:14px;padding:13px 15px;font-family:'IBM Plex Mono',monospace;font-size:16px;
+  font-weight:500;letter-spacing:1px;text-transform:uppercase;box-shadow:var(--shadow)}
+.bar input::placeholder{color:var(--ink-4);letter-spacing:.5px}
+.bar input:focus{outline:none;border-color:var(--blue)}
+.bar button{background:var(--blue-deep);color:#fbf6ea;border:none;border-radius:14px;
+  padding:0 22px;font-family:inherit;font-weight:600;font-size:14px;cursor:pointer;
+  box-shadow:var(--shadow);transition:.15s;white-space:nowrap}
+.bar button:hover{background:#54707f}
+.bar button:disabled{opacity:.55;cursor:default}
+.hint{font-size:12px;color:var(--ink-3);margin-left:4px}
+.hint b{color:var(--ink-2);font-weight:600;cursor:pointer}
+.hint b:hover{color:var(--blue-deep)}
+
+/* ---------- notices ---------- */
+.notice{display:none;align-items:center;gap:9px;background:var(--warn-soft);
+  border:1px solid var(--warn);border-radius:13px;padding:11px 14px;margin:18px 0 4px;
+  font-size:13px;color:var(--ink);font-weight:500}
+.notice.show{display:flex}
+.notice .dot{width:8px;height:8px;border-radius:50%;background:var(--warn);flex:none}
+
+/* ---------- profile strip ---------- */
+.profile{display:none;background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);
+  padding:16px var(--pad);margin:20px 0 6px;align-items:baseline;gap:12px;flex-wrap:wrap}
+.profile.show{display:flex}
+.profile .tk{font-family:'Fraunces',serif;font-size:22px;font-weight:600}
+.profile .nm{font-size:14px;color:var(--ink-2);font-weight:500}
+.profile .px{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:500}
+.profile .meta{flex-basis:100%;font-size:12px;color:var(--ink-3);margin-top:2px}
+
+/* ---------- analyst cards ---------- */
+.cards{display:flex;flex-direction:column;gap:13px;margin-top:18px}
+.card{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);
+  padding:18px var(--pad);border-left:3px solid var(--hair);
+  animation:rise .45s cubic-bezier(.2,.7,.3,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.card .role{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.card .role .name{font-family:'Fraunces',serif;font-size:17px;font-weight:600;letter-spacing:-.2px}
+.card .role .job{font-size:11.5px;color:var(--ink-3);font-weight:500}
+.card .body{font-size:14.5px;color:var(--ink-2);line-height:1.62}
+.card.err .body{color:var(--ink-3);font-style:italic}
+.card.bull{border-left-color:var(--up)}
+.card.valuation{border-left-color:var(--blue)}
+.card.macro{border-left-color:var(--warn)}
+.card.checklist{border-left-color:var(--ink-4)}
+.card.bear{border-left:3px solid var(--down);background:var(--down-soft)}
+.card.bear .name{color:#9c5f44}
+
+/* the live "thinking" placeholder card */
+.card.pending{border-left-color:var(--blue);opacity:.85}
+.card.pending .body{color:var(--ink-3)}
+.dots span{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--ink-3);
+  margin-right:3px;animation:blink 1.2s infinite both}
+.dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+
+/* ---------- verdict banner ---------- */
+.verdict{display:none;text-align:center;margin:26px 0 8px;padding:22px;
+  border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+.verdict.show{display:block}
+.verdict .big{font-family:'Fraunces',serif;font-size:22px;font-weight:500;letter-spacing:-.3px}
+.verdict .sub{font-size:13px;color:var(--ink-3);margin-top:7px}
+
+footer{margin-top:34px;font-size:12px;color:var(--ink-3);line-height:1.6}
+footer b{color:var(--ink-2);font-weight:600}
+footer a{color:var(--blue-deep);text-decoration:none}
+footer a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Multi-agent research desk</div>
+  <h1 class="serif">Finance AI Research Agent</h1>
+  <p class="tagline">A panel of analyst agents argues a stock from every side — Bull, Valuation,
+    Macro, a quality Checklist — then a <b>Bear</b> is handed their cases and told to tear them
+    apart. You get the strongest case each way, and <b>never a rating</b>. The call stays yours.</p>
+</header>
+
+<div class="bar">
+  <input id="ticker" placeholder="Enter a ticker…" maxlength="8" autocomplete="off"
+         spellcheck="false" aria-label="Stock ticker">
+  <button id="run">Hold the meeting</button>
+</div>
+<div class="hint">Try <b data-t="AAPL">AAPL</b> · <b data-t="NVDA">NVDA</b> · <b data-t="MSFT">MSFT</b></div>
+
+<div class="notice" id="notice"><span class="dot"></span><span id="notice-text"></span></div>
+
+<div class="profile" id="profile">
+  <span class="tk mono" id="p-tk"></span>
+  <span class="nm" id="p-nm"></span>
+  <span class="px mono" id="p-px"></span>
+  <span class="meta" id="p-meta"></span>
+</div>
+
+<div class="cards" id="cards"></div>
+
+<div class="verdict" id="verdict">
+  <div class="big serif">No verdict. No rating.</div>
+  <div class="sub" id="verdict-sub">The strongest case each way is above — the decision is yours.</div>
+</div>
+
+<footer>
+  <b>Not investment advice.</b> Output is AI-generated analysis for thinking, not a recommendation
+  to buy or sell anything. It gives no rating by design — do your own diligence.<br>
+  Open source · <a href="https://github.com/Kanzensucks/Finance_AI_Research_Agent" target="_blank" rel="noopener">github.com/Kanzensucks/Finance_AI_Research_Agent</a>
+</footer>
+
+<script>
+const JOBS = {
+  Bull: "the strongest case for owning it",
+  Valuation: "cheap or expensive — what's priced in",
+  Macro: "the sector, rates & cycle backdrop",
+  Checklist: "a PASS / FLAG / FAIL diligence gate",
+  Bear: "fed the bull + valuation, told to attack",
+};
+const ORDER = ["Bull", "Valuation", "Macro", "Checklist"];
+
+const $ = (id) => document.getElementById(id);
+const input = $("ticker"), runBtn = $("run"), cards = $("cards");
+const profile = $("profile"), notice = $("notice"), verdict = $("verdict");
+let es = null;
+
+function fmtPrice(p){
+  if(p.price == null) return "";
+  const cur = p.currency && p.currency !== "USD" ? " " + p.currency : "";
+  return "$" + Number(p.price).toLocaleString(undefined,{maximumFractionDigits:2}) + cur;
+}
+
+function reset(){
+  if(es){ es.close(); es = null; }
+  cards.innerHTML = "";
+  profile.classList.remove("show");
+  notice.classList.remove("show");
+  verdict.classList.remove("show");
+}
+
+function cardFor(name){
+  let el = document.getElementById("card-" + name);
+  if(!el){
+    el = document.createElement("div");
+    el.id = "card-" + name;
+    el.className = "card " + name.toLowerCase();
+    cards.appendChild(el);
+  }
+  return el;
+}
+
+function fillCard(name, view, error){
+  const el = cardFor(name);
+  el.className = "card " + name.toLowerCase() + (error ? " err" : "");
+  const job = JOBS[name] || "";
+  const body = error
+    ? "Unavailable — " + error
+    : (view || "").replace(/&/g,"&amp;").replace(/</g,"&lt;");
+  el.innerHTML =
+    '<div class="role"><span class="name serif">' + name + '</span>' +
+    '<span class="job">' + job + '</span></div>' +
+    '<div class="body">' + body + '</div>';
+}
+
+function pendingCard(name){
+  const el = cardFor(name);
+  el.className = "card pending " + name.toLowerCase();
+  el.innerHTML =
+    '<div class="role"><span class="name serif">' + name + '</span>' +
+    '<span class="job">' + (JOBS[name]||"") + '</span></div>' +
+    '<div class="body dots"><span></span><span></span><span></span></div>';
+}
+
+function showNotice(text){
+  $("notice-text").textContent = text;
+  notice.classList.add("show");
+}
+
+function start(){
+  const t = (input.value || "").trim().toUpperCase();
+  if(!t) return;
+  reset();
+  runBtn.disabled = true;
+  runBtn.textContent = "Meeting in session…";
+
+  // Show the desk as pending placeholders so the room feels alive while calls run.
+  ORDER.forEach(pendingCard);
+
+  es = new EventSource("/api/meeting?ticker=" + encodeURIComponent(t));
+
+  es.addEventListener("meta", (e) => {
+    const d = JSON.parse(e.data);
+    if(d.cached) showNotice(d.note || "Showing a saved run.");
+  });
+
+  es.addEventListener("profile", (e) => {
+    const p = JSON.parse(e.data);
+    $("p-tk").textContent = p.ticker || t;
+    $("p-nm").textContent = p.name || "";
+    $("p-px").textContent = fmtPrice(p);
+    const bits = [p.sector, p.industry].filter(Boolean).join(" · ");
+    $("p-meta").textContent = bits;
+    profile.classList.add("show");
+  });
+
+  es.addEventListener("analyst", (e) => {
+    const d = JSON.parse(e.data);
+    fillCard(d.name, d.view, d.error);
+  });
+
+  es.addEventListener("bear", (e) => {
+    const d = JSON.parse(e.data);
+    fillCard("Bear", d.view, d.error);
+  });
+
+  es.addEventListener("error_msg", (e) => {
+    const d = JSON.parse(e.data);
+    showNotice(d.message || "Something went wrong.");
+  });
+
+  es.addEventListener("done", (e) => {
+    try { $("verdict-sub").textContent = JSON.parse(e.data).note || $("verdict-sub").textContent; }
+    catch(_){}
+    verdict.classList.add("show");
+    finish();
+  });
+
+  // Network/stream error (not a server "error" event) — close and re-enable.
+  es.onerror = () => { if(es && es.readyState === 2) finish(); };
+}
+
+function finish(){
+  if(es){ es.close(); es = null; }
+  runBtn.disabled = false;
+  runBtn.textContent = "Hold the meeting";
+}
+
+runBtn.addEventListener("click", start);
+input.addEventListener("keydown", (e) => { if(e.key === "Enter") start(); });
+document.querySelectorAll(".hint b").forEach((b) => {
+  b.addEventListener("click", () => { input.value = b.dataset.t; start(); });
+});
+input.focus();
+</script>
+</body>
+</html>

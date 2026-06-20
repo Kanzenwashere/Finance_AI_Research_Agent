@@ -71,11 +71,15 @@ def hold_meeting(
     timeout: int = DEFAULT_TIMEOUT,
     fetch: Callable[[str], dict[str, Any]] = market.snapshot,
     on_event: Callable[[str], None] | None = None,
+    on_analyst: Callable[[str, str | None, str | None], None] | None = None,
 ) -> Meeting:
     """Run a full research meeting on `ticker` and return the structured dissent (no verdict).
 
     `fetch` is the market-data source (injectable for tests). `on_event(tag)` is an optional
-    progress hook ("view:Bull", "error:Macro", "bear") and is never allowed to be fatal.
+    progress hook ("view:Bull", "error:Macro", "bear"). `on_analyst(name, view, error)` is an
+    optional content hook that fires as each analyst — and the Bear (name "Bear") — lands, with the
+    actual argument text, so a caller can stream the debate live. Neither hook is ever allowed to
+    be fatal.
     """
     ticker = (ticker or "").strip().upper()
     if not ticker:
@@ -88,6 +92,13 @@ def hold_meeting(
             try:
                 on_event(tag)
             except Exception:  # noqa: BLE001 — a progress hook must never break the run
+                pass
+
+    def emit_analyst(name: str, view: str | None, err: str | None) -> None:
+        if on_analyst:
+            try:
+                on_analyst(name, view, err)
+            except Exception:  # noqa: BLE001 — a content hook must never break the run
                 pass
 
     context = market.format_context(ticker, meeting.profile)
@@ -111,6 +122,7 @@ def hold_meeting(
             else:
                 meeting.views[name] = view
                 emit(f"view:{name}")
+            emit_analyst(name, view, err)
 
     # The bear runs last, fed the bull and valuation cases it must rebut.
     bull = meeting.views.get("Bull", "(no bull case was produced)")
@@ -124,6 +136,7 @@ def hold_meeting(
     else:
         meeting.bear = view
         emit("bear")
+    emit_analyst("Bear", view, err)
 
     # No synthesis, no rating. The dissent is the product.
     return meeting

@@ -1,0 +1,7 @@
+# Runtime dependencies for a host build (e.g. Railway / Nixpacks). The web demo needs fastapi +
+# uvicorn on top of the core agent deps. For local dev, prefer `pip install -e ".[web]"`.
+anthropic>=0.40.0
+python-dotenv>=1.0.0
+yfinance>=0.2.40
+fastapi>=0.110
+uvicorn[standard]>=0.27

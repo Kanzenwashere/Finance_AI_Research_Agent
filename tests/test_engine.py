@@ -89,3 +89,16 @@ def test_progress_events_emitted():
     seen: list[str] = []
     hold_meeting("TEST", client=client, fetch=fake_fetch, on_event=seen.append)
     assert "view:Bull" in seen and "error:Macro" in seen and "bear" in seen
+
+
+def test_on_analyst_streams_content_for_desk_and_bear():
+    # The content hook fires once per desk analyst AND once for the Bear, carrying (name, view, err).
+    client = FakeClient(fail_on={"Macro analyst"})
+    got: list[tuple[str, str | None, str | None]] = []
+    hold_meeting("TEST", client=client, fetch=fake_fetch,
+                 on_analyst=lambda name, view, err: got.append((name, view, err)))
+    by_name = {name: (view, err) for name, view, err in got}
+    assert {a.name for a in DESK} | {"Bear"} <= set(by_name)   # every seat + the bear reported
+    assert by_name["Bull"][0] and by_name["Bull"][1] is None   # a view, no error
+    assert by_name["Macro"][0] is None and by_name["Macro"][1] is not None  # failed slot -> error
+    assert by_name["Bear"][0] is not None                      # bear streamed its content

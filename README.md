@@ -44,16 +44,16 @@ tension is the product, not a number.
 
 ---
 
-## Install
+## Run it yourself
 
 ```bash
 git clone https://github.com/Kanzensucks/Finance_AI_Research_Agent.git
 cd Finance_AI_Research_Agent
-pip install -e .
-cp .env.example .env        # then add your ANTHROPIC_API_KEY
+pip install -e ".[web]"      # core agent + the web demo (FastAPI + uvicorn)
+cp .env.example .env         # then add your ANTHROPIC_API_KEY
 ```
 
-## Use it from the command line
+**From the command line:**
 
 ```bash
 finance-research AAPL
@@ -63,6 +63,32 @@ finance-research --json TSLA > meeting.json
 
 The desk streams in as each analyst lands, then the bear makes its case, then a
 "no rating — your call" line. Nothing tells you what to do.
+
+**As a local web app** — the same debate, streamed live to a single cream page:
+
+```bash
+uvicorn research_firm.web:app --reload      # then open http://localhost:8000
+```
+
+Type a ticker; analyst cards stream in over Server-Sent Events, the Bear lands last, and you get a
+"no verdict" banner. With **no `ANTHROPIC_API_KEY` set**, the page still works — it serves a saved
+example run, so you can see the UI without spending anything.
+
+## Deploy your own
+
+It runs anywhere that can serve a FastAPI app. The repo ships a `Procfile`, a `requirements.txt`,
+and a `[web]` extra, so a one-click host like **Railway** works out of the box:
+
+1. Point a new service at this repo.
+2. Set `ANTHROPIC_API_KEY` as an environment variable (put a hard spend limit on the key — that's
+   your real cost backstop).
+3. Start command (also in the `Procfile`):
+   `uvicorn research_firm.web:app --host 0.0.0.0 --port $PORT`.
+
+It's a **public demo with no auth wall**, so it ships cheap guardrails: a per-IP hourly limit
+(`RATE_LIMIT_PER_HOUR`, default 3) and a global daily cap (`DAILY_CAP`, default 60). Past either —
+or if the key is missing or a run errors — it serves a committed **saved run** instead of failing,
+so the link always returns something and never runs up a bill.
 
 ## Use it as a library
 
