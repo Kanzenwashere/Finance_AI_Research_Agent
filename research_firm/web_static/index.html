@@ -14,14 +14,14 @@
   --blue:#7f99ac; --blue-deep:#5f7d92; --blue-soft:#e4ddca;
   --ink:#4a4334; --ink-2:#766c57; --ink-3:#a39a82; --ink-4:#c4b89c;
   --up:#7a9b6f; --up-soft:#e6e0c8; --down:#bd9079; --down-soft:#ecdcc6;
-  --warn:#c79a5a; --warn-soft:#ecdcbc; --gold:#c79a5a;
+  --warn:#c79a5a; --warn-soft:#ecdcbc; --gold:#c79a5a; --bear-ink:#9c5f44;
   --shadow:0 1px 2px rgba(74,67,52,.05),0 4px 14px rgba(74,67,52,.06);
   --r:18px; --pad:22px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{background:var(--bg);color:var(--ink)}
 body{font-family:'IBM Plex Sans',-apple-system,sans-serif;font-size:15px;line-height:1.55;
-  -webkit-font-smoothing:antialiased;max-width:720px;margin:0 auto;min-height:100vh;padding:30px 20px 90px}
+  -webkit-font-smoothing:antialiased;max-width:1040px;margin:0 auto;min-height:100vh;padding:30px 28px 90px}
 .serif{font-family:'Fraunces',Georgia,serif}
 .mono{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums}
 .dim{color:var(--ink-3)}
@@ -30,74 +30,83 @@ header{margin-bottom:16px}
 .eyebrow{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;color:var(--ink-3);margin-bottom:7px}
 h1{font-family:'Fraunces',serif;font-size:30px;font-weight:500;letter-spacing:-.5px;line-height:1.08}
 
-/* ---------- tab nav ---------- */
-.tabs{display:flex;gap:5px;flex-wrap:wrap;background:var(--surface-2);border-radius:14px;padding:4px;margin-bottom:20px}
-.tab{flex:1;min-width:72px;background:none;border:none;border-radius:11px;padding:9px 10px;cursor:pointer;
-  font-family:inherit;font-weight:600;font-size:12.5px;color:var(--ink-3);transition:.15s;white-space:nowrap}
+/* tab nav */
+.tabs{display:flex;gap:5px;flex-wrap:wrap;background:var(--surface-2);border-radius:14px;padding:4px;margin-bottom:22px;max-width:560px}
+.tab{flex:1;min-width:72px;background:none;border:none;border-radius:11px;padding:9px 10px;cursor:pointer;font-family:inherit;font-weight:600;font-size:12.5px;color:var(--ink-3);transition:.15s;white-space:nowrap}
 .tab:hover{color:var(--ink-2)}
 .tab.on{background:var(--surface);color:var(--blue-deep);box-shadow:var(--shadow)}
-.tab .n{display:inline-block;margin-left:5px;font-size:11px;color:var(--ink-4);font-weight:500}
-.tab.on .n{color:var(--blue)}
-
-.tab-panel{display:none}
-.tab-panel.on{display:block;animation:fade .25s ease both}
+.tab .n{display:inline-block;margin-left:5px;font-size:11px;color:var(--ink-4);font-weight:500}.tab.on .n{color:var(--blue)}
+.tab-panel{display:none}.tab-panel.on{display:block;animation:fade .25s ease both}
 @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 .panel-cap{font-family:'Fraunces',serif;font-size:20px;font-weight:500;margin:2px 0 3px}
 .panel-sub{font-size:13px;color:var(--ink-3);margin-bottom:16px}
+.col{max-width:760px}
 
-/* ---------- search bar ---------- */
-.bar{display:flex;gap:10px;margin:0 0 6px}
-.bar input{flex:1;background:var(--surface);border:1px solid var(--hair);color:var(--ink);
-  border-radius:14px;padding:13px 15px;font-family:'IBM Plex Mono',monospace;font-size:16px;
-  font-weight:500;letter-spacing:1px;text-transform:uppercase;box-shadow:var(--shadow)}
+/* search bar */
+.bar{display:flex;gap:10px;margin:0 0 6px;max-width:680px}
+.bar input{flex:1;background:var(--surface);border:1px solid var(--hair);color:var(--ink);border-radius:14px;padding:13px 15px;
+  font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:500;letter-spacing:1px;text-transform:uppercase;box-shadow:var(--shadow)}
 .bar input::placeholder{color:var(--ink-4);letter-spacing:.5px}
 .bar input:focus{outline:none;border-color:var(--blue)}
-.bar button{background:var(--blue-deep);color:#fbf6ea;border:none;border-radius:14px;padding:0 22px;
-  font-family:inherit;font-weight:600;font-size:14px;cursor:pointer;box-shadow:var(--shadow);transition:.15s;white-space:nowrap}
-.bar button:hover{background:#54707f}
-.bar button:disabled{opacity:.55;cursor:default}
-.hint{font-size:12px;color:var(--ink-3);margin:0 0 0 4px}
-.hint b{color:var(--ink-2);font-weight:600;cursor:pointer}
-.hint b:hover{color:var(--blue-deep)}
+.bar button{background:var(--blue-deep);color:#fbf6ea;border:none;border-radius:14px;padding:0 22px;font-family:inherit;font-weight:600;font-size:14px;cursor:pointer;box-shadow:var(--shadow);transition:.15s;white-space:nowrap}
+.bar button:hover{background:#54707f}.bar button:disabled{opacity:.55;cursor:default}
+.hint{font-size:12px;color:var(--ink-3);margin:0 0 0 4px}.hint b{color:var(--ink-2);font-weight:600;cursor:pointer}.hint b:hover{color:var(--blue-deep)}
 
-/* ---------- notices ---------- */
-.notice{display:none;align-items:center;gap:9px;background:var(--warn-soft);border:1px solid var(--warn);
-  border-radius:13px;padding:11px 14px;margin:18px 0 4px;font-size:13px;color:var(--ink);font-weight:500}
-.notice.show{display:flex}
-.notice .dot{width:8px;height:8px;border-radius:50%;background:var(--warn);flex:none}
+.notice{display:none;align-items:center;gap:9px;background:var(--warn-soft);border:1px solid var(--warn);border-radius:13px;padding:11px 14px;margin:18px 0 4px;font-size:13px;color:var(--ink);font-weight:500;max-width:680px}
+.notice.show{display:flex}.notice .dot{width:8px;height:8px;border-radius:50%;background:var(--warn);flex:none}
 
-/* ---------- profile strip ---------- */
-.profile{display:none;background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);
-  padding:16px var(--pad);margin:20px 0 6px;align-items:baseline;gap:10px;flex-wrap:wrap}
+.profile{display:none;background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:16px var(--pad);margin:20px 0 6px;align-items:baseline;gap:10px;flex-wrap:wrap}
 .profile.show{display:flex}
 .profile .tk{font-family:'Fraunces',serif;font-size:22px;font-weight:600}
 .profile .star{background:none;border:none;cursor:pointer;font-size:18px;line-height:1;color:var(--ink-4);padding:0;align-self:center;transition:.15s}
-.profile .star.on{color:var(--gold)}
-.profile .star:hover{transform:scale(1.15)}
+.profile .star.on{color:var(--gold)}.profile .star:hover{transform:scale(1.15)}
 .profile .nm{font-size:14px;color:var(--ink-2);font-weight:500}
 .profile .px{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:500}
 .profile .meta{flex-basis:100%;font-size:12px;color:var(--ink-3);margin-top:2px}
 
-/* ---------- analyst cards ---------- */
-.cards{display:flex;flex-direction:column;gap:13px;margin-top:18px}
-.card{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:20px var(--pad);
-  border-left:3px solid var(--hair);animation:rise .45s cubic-bezier(.2,.7,.3,1) both}
+/* desk + bear section labels */
+.seclabel{display:none;align-items:baseline;justify-content:space-between;margin:22px 0 0;flex-wrap:wrap;gap:6px}
+.sl-h{font-family:'Fraunces',serif;font-size:16px;font-weight:500;color:var(--ink)}
+.sl-h.bear{color:var(--bear-ink)}
+.sl-sub{font-size:12px;color:var(--ink-3);margin-left:8px}
+.sl-hint{font-size:12px;color:var(--ink-4)}
+
+/* collapsed analyst tiles */
+.desk{display:grid;grid-template-columns:repeat(auto-fit,minmax(218px,1fr));gap:14px;margin-top:12px}
+.tile{background:var(--surface);border:1px solid var(--hair);border-left-width:3px;border-radius:var(--r);box-shadow:var(--shadow);
+  padding:16px 17px;text-align:left;font:inherit;color:inherit;cursor:pointer;display:flex;flex-direction:column;gap:9px;min-height:138px;transition:border-color .12s,box-shadow .12s;animation:rise .4s cubic-bezier(.2,.7,.3,1) both}
 @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.card .role{display:flex;align-items:baseline;gap:9px;margin-bottom:12px}
-.card .role .name{font-family:'Fraunces',serif;font-size:18px;font-weight:600;letter-spacing:-.2px}
-.card .role .job{font-size:11.5px;color:var(--ink-3);font-weight:500}
-.card .body{font-size:14.5px;color:var(--ink-2);line-height:1.62}
-.card.err .body{color:var(--ink-3);font-style:italic}
-.card.bull{border-left-color:var(--up)}
-.card.valuation{border-left-color:var(--blue)}
-.card.macro{border-left-color:var(--warn)}
-.card.checklist{border-left-color:var(--ink-4)}
-.card.bear{border-left:3px solid var(--down);background:var(--down-soft)}
-.card.bear .name{color:#9c5f44}
+.tile:hover{border-color:var(--blue)}
+.tile.sel{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue),var(--shadow)}
+.tile.bull{border-left-color:var(--up)}.tile.valuation{border-left-color:var(--blue)}.tile.macro{border-left-color:var(--warn)}.tile.checklist{border-left-color:var(--ink-4)}
+.tile-top{display:flex;align-items:baseline;gap:8px}
+.tile .t-name{font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--ink)}
+.tile .t-role{font-size:11.5px;color:var(--ink-3)}
+.tile .t-stance{font-size:13px;line-height:1.5;color:var(--ink-2);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.tile .t-foot{display:flex;align-items:center;gap:8px;margin-top:auto;font-size:12px;color:var(--blue-deep);font-weight:600}
+.tile .t-chip{font-size:11px;color:var(--ink-2);background:var(--surface-2);border-radius:8px;padding:2px 8px;font-family:'IBM Plex Mono',monospace}
+.bear-host{margin-top:12px}
+.tile.bear{border:1px solid var(--down);border-left:3px solid var(--down);background:var(--down-soft)}
+.tile.bear .t-name{color:var(--bear-ink)}.tile.bear .t-foot{color:var(--bear-ink)}
+.dots span{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--ink-3);margin-right:3px;animation:blink 1.2s infinite both}
+.dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+
+/* expanded reading pane */
+.reader-card{background:var(--surface);border:1px solid var(--hair);border-radius:var(--r);box-shadow:var(--shadow);padding:20px 24px;margin-top:13px;animation:rise .3s ease both}
+.reader-card.bear{border-color:var(--down);background:var(--down-soft)}
+.reader-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:12px}
+.rh-name{font-family:'Fraunces',serif;font-size:19px;font-weight:600}
+.reader-card.bear .rh-name{color:var(--bear-ink)}
+.rh-role{font-size:12px;color:var(--ink-3);margin-left:8px}
+.reader-close{background:none;border:none;color:var(--ink-3);cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;white-space:nowrap}
+.reader-close:hover{color:var(--ink)}
+.reader-card .body{max-width:74ch}
+
+/* markdown body */
+.body{font-size:14.5px;color:var(--ink-2);line-height:1.62}
 .body > :first-child{margin-top:0}.body > :last-child{margin-bottom:0}
-.body p{margin:0 0 11px}
-.body strong{color:var(--ink);font-weight:600}
-.body em{font-style:italic}
+.body p{margin:0 0 11px}.body strong{color:var(--ink);font-weight:600}.body em{font-style:italic}
 .body ul,.body ol{margin:8px 0 12px;padding-left:20px}.body li{margin:4px 0}.body li::marker{color:var(--ink-4)}
 .body blockquote{margin:11px 0;padding:3px 0 3px 14px;border-left:2px solid var(--hair);color:var(--ink-2)}
 .body code{font-family:'IBM Plex Mono',monospace;font-size:.9em;background:var(--surface-2);padding:1px 5px;border-radius:5px}
@@ -105,20 +114,14 @@ h1{font-family:'Fraunces',serif;font-size:30px;font-weight:500;letter-spacing:-.
 .body .mdh{font-family:'Fraunces',serif;color:var(--ink);line-height:1.25;margin:16px 0 8px;letter-spacing:-.2px}
 .body .mdh1{font-size:17px;font-weight:600}.body .mdh2{font-size:15px;font-weight:600}
 .body .mdh3{font-family:'IBM Plex Sans',sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:600;color:var(--ink-3);margin:18px 0 7px}
-.card.pending{border-left-color:var(--blue);opacity:.85}.card.pending .body{color:var(--ink-3)}
-.dots span{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--ink-3);margin-right:3px;animation:blink 1.2s infinite both}
-.dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
-@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
 
-/* ---------- DCF panel ---------- */
-.dcf{background:var(--bg);border:1px solid var(--hair);border-radius:13px;padding:14px 16px;margin-bottom:15px}
+/* DCF panel */
+.dcf{background:var(--bg);border:1px solid var(--hair);border-radius:13px;padding:14px 16px;margin-bottom:15px;max-width:560px}
 .dcf-h{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:600;color:var(--ink-3);margin-bottom:10px}
 .dcf-tag{font-size:9.5px;letter-spacing:.5px;background:var(--surface-2);color:var(--ink-3);padding:2px 7px;border-radius:8px}
-.dcf-range{font-size:15px;color:var(--ink-2)}
-.dcf-range b{font-family:'IBM Plex Mono',monospace;color:var(--ink);font-weight:600;font-size:16px}
+.dcf-range{font-size:15px;color:var(--ink-2)}.dcf-range b{font-family:'IBM Plex Mono',monospace;color:var(--ink);font-weight:600;font-size:16px}
 .dcf-base{color:var(--ink-3);font-size:13px}
-.dcf-price{font-size:12.5px;color:var(--ink-3);margin-top:4px}
-.dcf-price .pos{font-weight:600}.dcf-price .above{color:var(--down)}.dcf-price .below{color:var(--up)}.dcf-price .within{color:var(--ink-2)}
+.dcf-price{font-size:12.5px;color:var(--ink-3);margin-top:4px}.dcf-price .pos{font-weight:600}.dcf-price .above{color:var(--down)}.dcf-price .below{color:var(--up)}.dcf-price .within{color:var(--ink-2)}
 .dcf-assume{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-3);margin-top:10px;line-height:1.5}
 .dcf-grid{margin-top:12px;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:11px}
 .dcf-grid caption{caption-side:top;text-align:left;font-family:'IBM Plex Sans',sans-serif;font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-4);font-weight:600;margin-bottom:5px}
@@ -128,70 +131,53 @@ h1{font-family:'Fraunces',serif;font-size:30px;font-weight:500;letter-spacing:-.
 .dcf-note{font-size:11px;color:var(--ink-4);margin-top:11px;line-height:1.5}
 .dcf-na{font-size:12.5px;color:var(--ink-3);font-style:italic}
 
-/* ---------- verdict + triage ---------- */
-.verdict{display:none;text-align:center;margin:26px 0 8px;padding:22px;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+/* verdict + triage */
+.verdict{display:none;text-align:center;margin:28px 0 8px;padding:22px;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
 .verdict.show{display:block}
 .verdict .big{font-family:'Fraunces',serif;font-size:22px;font-weight:500;letter-spacing:-.3px}
 .verdict .sub{font-size:13px;color:var(--ink-3);margin-top:7px}
 .triage{display:flex;gap:9px;justify-content:center;margin-top:16px}
-.triage button{background:var(--surface-2);border:1px solid var(--hair);border-radius:11px;padding:8px 15px;
-  font-family:inherit;font-weight:600;font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s}
+.triage button{background:var(--surface-2);border:1px solid var(--hair);border-radius:11px;padding:8px 15px;font-family:inherit;font-weight:600;font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s}
 .triage button:hover{border-color:var(--blue);color:var(--ink)}
 .triage button.on{background:var(--up-soft);border-color:var(--up);color:#5e7a54}
 
-/* ---------- saved lists (watchlist / radar) ---------- */
-.list{display:flex;flex-direction:column;gap:10px}
-.li{display:flex;align-items:center;gap:12px;background:var(--surface);border-radius:14px;box-shadow:var(--shadow);
-  padding:14px 16px;cursor:pointer;transition:.15s;border:1px solid transparent}
+/* lists, book, balance */
+.list{display:flex;flex-direction:column;gap:10px;max-width:760px}
+.li{display:flex;align-items:center;gap:12px;background:var(--surface);border-radius:14px;box-shadow:var(--shadow);padding:14px 16px;cursor:pointer;transition:.15s;border:1px solid transparent}
 .li:hover{border-color:var(--blue)}
 .li .li-tk{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:15px;color:var(--ink);min-width:60px}
+.li .li-mid{flex:1;min-width:0}
 .li .li-nm{font-size:13px;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .li .li-sec{font-size:11px;color:var(--ink-4);margin-top:2px}
-.li .li-mid{flex:1;min-width:0}
 .li .li-px{font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--ink-2);font-weight:500;white-space:nowrap}
 .li .li-go{background:var(--surface-2);border:1px solid var(--hair);border-radius:9px;padding:5px 11px;font-family:inherit;font-size:12px;font-weight:600;color:var(--ink-2);cursor:pointer;white-space:nowrap}
 .li .li-go:hover{border-color:var(--blue);color:var(--ink)}
-.li .li-x{background:none;border:none;color:var(--ink-4);font-size:14px;cursor:pointer;padding:0 2px}
-.li .li-x:hover{color:var(--down)}
-.empty{color:var(--ink-3);font-size:13.5px;line-height:1.6;background:var(--surface);border-radius:14px;padding:20px var(--pad);text-align:center}
-.empty b{color:var(--ink-2);font-weight:600;cursor:pointer}
-.empty b:hover{color:var(--blue-deep)}
-
-/* ---------- book (holdings) ---------- */
+.li .li-x{background:none;border:none;color:var(--ink-4);font-size:14px;cursor:pointer;padding:0 2px}.li .li-x:hover{color:var(--down)}
+.empty{color:var(--ink-3);font-size:13.5px;line-height:1.6;background:var(--surface);border-radius:14px;padding:20px var(--pad);text-align:center;max-width:760px}
+.empty b{color:var(--ink-2);font-weight:600;cursor:pointer}.empty b:hover{color:var(--blue-deep)}
 .hold-form{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
 .hold-form input{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:9px 11px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink)}
-.hold-form input:focus{outline:none;border-color:var(--blue)}
-.hold-form .f-tk{width:96px;text-transform:uppercase}.hold-form .f-n{width:88px}
-.hold-form button{background:var(--blue-deep);color:#fbf6ea;border:none;border-radius:10px;padding:9px 15px;font-family:inherit;font-weight:600;font-size:13px;cursor:pointer}
-.hold-form button:hover{background:#54707f}
+.hold-form input:focus{outline:none;border-color:var(--blue)}.hold-form .f-tk{width:96px;text-transform:uppercase}.hold-form .f-n{width:88px}
+.hold-form button{background:var(--blue-deep);color:#fbf6ea;border:none;border-radius:10px;padding:9px 15px;font-family:inherit;font-weight:600;font-size:13px;cursor:pointer}.hold-form button:hover{background:#54707f}
+#hold-table{max-width:760px}
 .hrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:11px 2px;border-top:1px solid var(--hair-soft);font-size:13px}
 .hrow .h-tk{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--ink);min-width:52px}
-.hrow .h-pos{color:var(--ink-3);font-size:12.5px}
-.hrow .h-now{font-family:'IBM Plex Mono',monospace;color:var(--ink-2)}
+.hrow .h-pos{color:var(--ink-3);font-size:12.5px}.hrow .h-now{font-family:'IBM Plex Mono',monospace;color:var(--ink-2)}
 .hrow .h-val{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--ink);margin-left:auto}
-.hrow .h-gain{font-family:'IBM Plex Mono',monospace;font-size:12.5px;min-width:62px;text-align:right}
-.hrow .h-gain.up{color:var(--up)}.hrow .h-gain.down{color:var(--down)}
-.hrow .h-review{background:var(--surface-2);border:1px solid var(--hair);border-radius:9px;padding:4px 10px;font-family:inherit;font-size:12px;font-weight:600;color:var(--ink-2);cursor:pointer}
-.hrow .h-review:hover{border-color:var(--blue);color:var(--ink)}
+.hrow .h-gain{font-family:'IBM Plex Mono',monospace;font-size:12.5px;min-width:62px;text-align:right}.hrow .h-gain.up{color:var(--up)}.hrow .h-gain.down{color:var(--down)}
+.hrow .h-review{background:var(--surface-2);border:1px solid var(--hair);border-radius:9px;padding:4px 10px;font-family:inherit;font-size:12px;font-weight:600;color:var(--ink-2);cursor:pointer}.hrow .h-review:hover{border-color:var(--blue);color:var(--ink)}
 .hrow .h-x{background:none;border:none;color:var(--ink-4);font-size:14px;cursor:pointer;padding:0 2px}.hrow .h-x:hover{color:var(--down)}
-.h-total{display:flex;justify-content:space-between;padding:12px 2px 2px;margin-top:4px;border-top:1.5px solid var(--hair);font-size:13px;font-weight:600;color:var(--ink)}
-.h-total .v{font-family:'IBM Plex Mono',monospace}
-.hold-note{font-size:11.5px;color:var(--ink-4);margin-top:14px;line-height:1.5}
-
-/* ---------- balance (sector distribution) ---------- */
-.balance{display:flex;flex-direction:column;gap:13px}
+.h-total{display:flex;justify-content:space-between;padding:12px 2px 2px;margin-top:4px;border-top:1.5px solid var(--hair);font-size:13px;font-weight:600;color:var(--ink);max-width:760px}.h-total .v{font-family:'IBM Plex Mono',monospace}
+.hold-note{font-size:11.5px;color:var(--ink-4);margin-top:14px;line-height:1.5;max-width:680px}
+.balance{display:flex;flex-direction:column;gap:13px;max-width:680px}
 .brow{display:flex;flex-direction:column;gap:5px}
-.brow .bhead{display:flex;justify-content:space-between;font-size:13px}
-.brow .bsec{font-weight:600;color:var(--ink)}
-.brow .bpct{font-family:'IBM Plex Mono',monospace;color:var(--ink-2)}
-.brow .btrack{height:9px;background:var(--surface-2);border-radius:6px;overflow:hidden}
-.brow .bfill{height:100%;border-radius:6px}
+.brow .bhead{display:flex;justify-content:space-between;font-size:13px}.brow .bsec{font-weight:600;color:var(--ink)}.brow .bpct{font-family:'IBM Plex Mono',monospace;color:var(--ink-2)}
+.brow .btrack{height:9px;background:var(--surface-2);border-radius:6px;overflow:hidden}.brow .bfill{height:100%;border-radius:6px}
 .brow .bval{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-4)}
-.bnote{font-size:11.5px;color:var(--ink-4);margin-top:16px;line-height:1.5}
+.bnote{font-size:11.5px;color:var(--ink-4);margin-top:16px;line-height:1.5;max-width:680px}
 
-footer{margin-top:34px;font-size:12px;color:var(--ink-3);line-height:1.6}
-footer b{color:var(--ink-2);font-weight:600}
-footer a{color:var(--blue-deep);text-decoration:none}footer a:hover{text-decoration:underline}
+footer{margin-top:38px;font-size:12px;color:var(--ink-3);line-height:1.6}
+footer b{color:var(--ink-2);font-weight:600}footer a{color:var(--blue-deep);text-decoration:none}footer a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -226,7 +212,18 @@ footer a{color:var(--blue-deep);text-decoration:none}footer a:hover{text-decorat
     <span class="meta" id="p-meta"></span>
   </div>
 
-  <div class="cards" id="cards"></div>
+  <div class="seclabel" id="desk-label">
+    <div><span class="sl-h">The desk</span><span class="sl-sub">four analysts, in parallel</span></div>
+    <span class="sl-hint">tap a card to read its memo</span>
+  </div>
+  <div class="desk" id="desk"></div>
+  <div id="reader"></div>
+
+  <div class="seclabel" id="bear-label">
+    <div><span class="sl-h bear">The bear</span><span class="sl-sub">runs last · attacks the bull &amp; valuation</span></div>
+  </div>
+  <div class="bear-host" id="bear-host"></div>
+  <div id="bear-reader"></div>
 
   <div class="verdict" id="verdict">
     <div class="big serif">No verdict. No rating.</div>
@@ -240,22 +237,22 @@ footer a{color:var(--blue-deep);text-decoration:none}footer a:hover{text-decorat
 
 <!-- ============ WATCHLIST ============ -->
 <section class="tab-panel" data-tab="watchlist">
-  <div class="panel-cap">Watchlist</div>
-  <div class="panel-sub">Names you're committed to following. Tap one to run the desk again.</div>
+  <div class="col"><div class="panel-cap">Watchlist</div>
+  <div class="panel-sub">Names you're committed to following. Tap one to run the desk again.</div></div>
   <div class="list" id="watch-list"></div>
 </section>
 
 <!-- ============ RADAR ============ -->
 <section class="tab-panel" data-tab="radar">
-  <div class="panel-cap">Radar</div>
-  <div class="panel-sub">On your radar — watching, not yet committed. Tap one to research it.</div>
+  <div class="col"><div class="panel-cap">Radar</div>
+  <div class="panel-sub">On your radar — watching, not yet committed. Tap one to research it.</div></div>
   <div class="list" id="radar-list"></div>
 </section>
 
 <!-- ============ BOOK ============ -->
 <section class="tab-panel" data-tab="book">
-  <div class="panel-cap">Book</div>
-  <div class="panel-sub">Positions you hold. Per-holding figures only — never a portfolio score.</div>
+  <div class="col"><div class="panel-cap">Book</div>
+  <div class="panel-sub">Positions you hold. Per-holding figures only — never a portfolio score.</div></div>
   <form class="hold-form" id="hold-form">
     <input class="f-tk" id="h-ticker" placeholder="TICKER" maxlength="8" autocomplete="off" spellcheck="false" aria-label="Holding ticker">
     <input class="f-n" id="h-shares" type="number" step="any" min="0" placeholder="shares" aria-label="Shares">
@@ -270,8 +267,8 @@ footer a{color:var(--blue-deep);text-decoration:none}footer a:hover{text-decorat
 
 <!-- ============ BALANCE ============ -->
 <section class="tab-panel" data-tab="balance">
-  <div class="panel-cap">Balance</div>
-  <div class="panel-sub">Where your book sits by sector — a description of the mix, nothing more.</div>
+  <div class="col"><div class="panel-cap">Balance</div>
+  <div class="panel-sub">Where your book sits by sector — a description of the mix, nothing more.</div></div>
   <div class="balance" id="balance"></div>
 </section>
 
@@ -290,15 +287,16 @@ const JOBS = {
   Bear: "fed the bull + valuation, told to attack",
 };
 const ORDER = ["Bull", "Valuation", "Macro", "Checklist"];
+const ALL = ["Bull", "Valuation", "Macro", "Checklist", "Bear"];
 const HOLD_KEY = "far_holdings", META_KEY = "far_meta";
 const LIST_KEY = { watch: "far_watch", radar: "far_radar" };
 const LIST_MAX = 40;
 const SECTOR_COLORS = ["#7f99ac", "#7a9b6f", "#c79a5a", "#bd9079", "#9d86a8", "#86a8a0", "#c4b89c", "#8c97c4"];
 
 const $ = (id) => document.getElementById(id);
-const input = $("ticker"), runBtn = $("run"), cards = $("cards");
-const profile = $("profile"), notice = $("notice"), verdict = $("verdict");
+const input = $("ticker"), runBtn = $("run"), profile = $("profile"), notice = $("notice"), verdict = $("verdict");
 let es = null, curTicker = "", curProfile = {}, valModel = null;
+let memos = {}, openName = null;
 
 const LS = {
   get(k, d){ try{ const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; }catch(_){ return d; } },
@@ -356,27 +354,12 @@ function renderMarkdown(text){
   flushPara(); closeList();
   return html;
 }
+function stancePreview(view){
+  let t = (view || "").replace(/[#*_>`]/g, " ").replace(/\s+/g, " ").trim();
+  return t.replace(/^\d*\.?\s*stance[\s.:—-]*/i, "");
+}
 
-// ---------- research: cards ----------
-function reset(){
-  if(es){ es.close(); es = null; }
-  cards.innerHTML = "";
-  profile.classList.remove("show");
-  notice.classList.remove("show");
-  verdict.classList.remove("show");
-}
-function cardFor(name){
-  let el = document.getElementById("card-" + name);
-  if(!el){ el = document.createElement("div"); el.id = "card-" + name; el.className = "card " + name.toLowerCase(); cards.appendChild(el); }
-  return el;
-}
-function roleEl(name){
-  const role = document.createElement("div"); role.className = "role";
-  const nm = document.createElement("span"); nm.className = "name serif"; nm.textContent = name;
-  const job = document.createElement("span"); job.className = "job"; job.textContent = JOBS[name] || "";
-  role.append(nm, job);
-  return role;
-}
+// ---------- DCF panel ----------
 function dcfPanel(vm){
   const wrap = document.createElement("div"); wrap.className = "dcf";
   const h = document.createElement("div"); h.className = "dcf-h";
@@ -401,8 +384,8 @@ function dcfPanel(vm){
     p.append(w, document.createTextNode(" the range.")); wrap.append(p);
   }
   const a = document.createElement("div"); a.className = "dcf-assume";
-  a.textContent = "FCF " + bigMoney(vm.fcf) + " · WACC " + pctOf(vm.discount_rate) + " · growth "
-    + pctOf(vm.growth) + "→" + pctOf(vm.terminal_growth) + " · " + vm.years + "y · net debt " + bigMoney(vm.net_debt);
+  a.textContent = "FCF " + bigMoney(vm.fcf) + " · WACC " + pctOf(vm.discount_rate) + " · growth " + pctOf(vm.growth)
+    + "→" + pctOf(vm.terminal_growth) + " · " + vm.years + "y · net debt " + bigMoney(vm.net_debt);
   wrap.append(a);
   if(vm.grid && vm.grid.length){
     const t = document.createElement("table"); t.className = "dcf-grid";
@@ -423,22 +406,79 @@ function dcfPanel(vm){
   note.textContent = "Whole-company two-stage DCF on trailing free cash flow, with stated assumptions you can argue with. A range, not a price target. Not investment advice.";
   wrap.append(note); return wrap;
 }
-function fillCard(name, view, error){
-  const el = cardFor(name);
-  el.className = "card " + name.toLowerCase() + (error ? " err" : "");
-  const body = document.createElement("div"); body.className = "body";
-  if(error) body.textContent = "Unavailable — " + error;
-  else body.innerHTML = renderMarkdown(view || "");
-  const parts = [roleEl(name)];
-  if(name === "Valuation" && valModel) parts.push(dcfPanel(valModel));
-  parts.push(body);
-  el.replaceChildren(...parts);
+
+// ---------- desk tiles + reading pane ----------
+function reset(){
+  if(es){ es.close(); es = null; }
+  memos = {}; openName = null;
+  $("desk").replaceChildren(); $("reader").replaceChildren();
+  $("bear-host").replaceChildren(); $("bear-reader").replaceChildren();
+  $("desk-label").style.display = "none"; $("bear-label").style.display = "none";
+  profile.classList.remove("show"); notice.classList.remove("show"); verdict.classList.remove("show");
 }
-function pendingCard(name){
-  const el = cardFor(name);
-  el.className = "card pending " + name.toLowerCase();
-  const dots = document.createElement("div"); dots.className = "body dots"; dots.innerHTML = "<span></span><span></span><span></span>";
-  el.replaceChildren(roleEl(name), dots);
+const tileHost = (name) => name === "Bear" ? $("bear-host") : $("desk");
+function renderTile(name){
+  let el = document.getElementById("tile-" + name);
+  if(!el){
+    el = document.createElement("button"); el.id = "tile-" + name;
+    el.className = "tile " + name.toLowerCase() + (name === "Bear" ? " bear" : "");
+    el.addEventListener("click", () => openMemo(name));
+    tileHost(name).appendChild(el);
+  }
+  el.classList.toggle("sel", openName === name);
+  const m = memos[name];
+  const top = document.createElement("div"); top.className = "tile-top";
+  const nm = document.createElement("span"); nm.className = "t-name"; nm.textContent = name;
+  const rl = document.createElement("span"); rl.className = "t-role"; rl.textContent = JOBS[name] || "";
+  top.append(nm, rl);
+  if(!m){
+    const dots = document.createElement("div"); dots.className = "t-stance dots"; dots.innerHTML = "<span></span><span></span><span></span>";
+    el.replaceChildren(top, dots); return;
+  }
+  const st = document.createElement("div"); st.className = "t-stance";
+  st.textContent = m.error ? ("Unavailable — " + m.error) : stancePreview(m.view);
+  const foot = document.createElement("div"); foot.className = "t-foot";
+  if(name === "Valuation" && valModel && valModel.available){
+    const chip = document.createElement("span"); chip.className = "t-chip";
+    chip.textContent = "DCF " + money(valModel.value_low, valModel.currency) + "–" + money(valModel.value_high, valModel.currency);
+    foot.append(chip);
+  }
+  const read = document.createElement("span"); read.style.marginLeft = "auto";
+  read.textContent = openName === name ? "close ✕" : "read the memo ›";
+  foot.append(read);
+  el.replaceChildren(top, st, foot);
+}
+function renderReader(name){
+  const host = name === "Bear" ? $("bear-reader") : $("reader");
+  const other = name === "Bear" ? $("reader") : $("bear-reader");
+  other.replaceChildren(); host.replaceChildren();
+  const m = memos[name] || {};
+  const card = document.createElement("div"); card.className = "reader-card" + (name === "Bear" ? " bear" : "");
+  const head = document.createElement("div"); head.className = "reader-head";
+  const left = document.createElement("div");
+  const nm = document.createElement("span"); nm.className = "rh-name"; nm.textContent = name;
+  const rl = document.createElement("span"); rl.className = "rh-role"; rl.textContent = JOBS[name] || "";
+  left.append(nm, rl);
+  const close = document.createElement("button"); close.className = "reader-close"; close.textContent = "close ✕";
+  close.addEventListener("click", (e) => { e.stopPropagation(); openMemo(name); });
+  head.append(left, close); card.append(head);
+  if(name === "Valuation" && valModel) card.append(dcfPanel(valModel));
+  const body = document.createElement("div"); body.className = "body";
+  if(!m.view && !m.error) body.innerHTML = '<p class="dim">Thinking…</p>';
+  else if(m.error) body.textContent = "Unavailable — " + m.error;
+  else body.innerHTML = renderMarkdown(m.view || "");
+  card.append(body); host.append(card);
+}
+function openMemo(name){
+  openName = (openName === name) ? null : name;
+  $("reader").replaceChildren(); $("bear-reader").replaceChildren();
+  if(openName) renderReader(openName);
+  ALL.forEach((n) => { if(document.getElementById("tile-" + n)) renderTile(n); });
+}
+function setMemo(name, view, error){
+  memos[name] = { view, error };
+  renderTile(name);
+  if(openName === name) renderReader(name);
 }
 function showNotice(text){ $("notice-text").textContent = text; notice.classList.add("show"); }
 function renderProfile(p){
@@ -449,13 +489,11 @@ function renderProfile(p){
   $("p-px").textContent = money(p.price, p.currency);
   $("p-meta").textContent = [p.sector, p.industry].filter(Boolean).join(" · ");
   profile.classList.add("show");
-  // cache name/sector/price so the lists and Balance view can use them
   const meta = LS.get(META_KEY, {}), prev = meta[curTicker] || {};
   meta[curTicker] = {
     name: p.name || prev.name || "", sector: p.sector || prev.sector || null,
     currency: p.currency || prev.currency || null,
-    price: p.price != null ? p.price : (prev.price != null ? prev.price : null),
-    ts: Date.now(),
+    price: p.price != null ? p.price : (prev.price != null ? prev.price : null), ts: Date.now(),
   };
   LS.set(META_KEY, meta);
   updateStar();
@@ -473,10 +511,9 @@ function toggleList(kind, t, meta){
   refreshCounts();
 }
 function refreshCounts(){
-  const w = getList("watch").length, r = getList("radar").length, b = getHoldings().length;
-  $("n-watch").textContent = w ? w : "";
-  $("n-radar").textContent = r ? r : "";
-  $("n-book").textContent = b ? b : "";
+  $("n-watch").textContent = getList("watch").length || "";
+  $("n-radar").textContent = getList("radar").length || "";
+  $("n-book").textContent = getHoldings().length || "";
 }
 function researchTicker(t){ showTab("research"); input.value = t; start(); }
 function renderList(kind){
@@ -496,24 +533,21 @@ function renderList(kind){
     row.addEventListener("click", () => researchTicker(it.ticker));
     const tk = document.createElement("span"); tk.className = "li-tk"; tk.textContent = it.ticker;
     const mid = document.createElement("div"); mid.className = "li-mid";
-    const nm = document.createElement("div"); nm.className = "li-nm"; nm.textContent = m.name || it.name || "—";
-    mid.append(nm);
+    const nm = document.createElement("div"); nm.className = "li-nm"; nm.textContent = m.name || it.name || "—"; mid.append(nm);
     if(m.sector){ const sec = document.createElement("div"); sec.className = "li-sec"; sec.textContent = m.sector; mid.append(sec); }
     const px = document.createElement("span"); px.className = "li-px"; px.textContent = m.price != null ? money(m.price, m.currency) : "";
     const go = document.createElement("button"); go.className = "li-go"; go.textContent = "Research";
     go.addEventListener("click", (e) => { e.stopPropagation(); researchTicker(it.ticker); });
     const x = document.createElement("button"); x.className = "li-x"; x.textContent = "✕"; x.title = "Remove";
     x.addEventListener("click", (e) => { e.stopPropagation(); toggleList(kind, it.ticker); renderList(kind); });
-    row.append(tk, mid, px, go, x);
-    host.appendChild(row);
+    row.append(tk, mid, px, go, x); host.appendChild(row);
   });
 }
 
 // ---------- star + triage ----------
 function updateStar(){
   const on = inList("watch", curTicker), s = $("star");
-  s.textContent = on ? "★" : "☆";
-  s.classList.toggle("on", on);
+  s.textContent = on ? "★" : "☆"; s.classList.toggle("on", on);
   s.title = on ? "Remove from watchlist" : "Add to watchlist";
 }
 function updateTriage(){
@@ -522,7 +556,7 @@ function updateTriage(){
   $("tri-radar").textContent = (r ? "✓ " : "✦ ") + "Radar"; $("tri-radar").classList.toggle("on", r);
 }
 
-// ---------- book (holdings) ----------
+// ---------- book ----------
 const getHoldings = () => LS.get(HOLD_KEY, []);
 function renderHoldings(){
   const h = getHoldings(), meta = LS.get(META_KEY, {}), tbl = $("hold-table");
@@ -570,7 +604,7 @@ $("hold-form").addEventListener("submit", (e) => {
   renderHoldings(); refreshCounts();
 });
 
-// ---------- balance (descriptive sector mix of the book) ----------
+// ---------- balance ----------
 function renderBalance(){
   const h = getHoldings(), meta = LS.get(META_KEY, {}), host = $("balance");
   host.replaceChildren();
@@ -583,12 +617,11 @@ function renderBalance(){
   });
   if(total <= 0){
     const e = document.createElement("div"); e.className = "empty";
-    e.innerHTML = "Add holdings in <b data-go='book'>Book</b> and run them so each gets a sector and a price — then your mix shows here.";
+    e.innerHTML = "Add holdings in <b>Book</b> and run them so each gets a sector and a price — then your mix shows here.";
     e.querySelector("b").addEventListener("click", () => showTab("book"));
     host.appendChild(e); return;
   }
-  const rows = Object.entries(bySector).sort((a, b) => b[1] - a[1]);
-  rows.forEach(([sec, val], i) => {
+  Object.entries(bySector).sort((a, b) => b[1] - a[1]).forEach(([sec, val], i) => {
     const pct = val / total * 100, color = SECTOR_COLORS[i % SECTOR_COLORS.length];
     const r = document.createElement("div"); r.className = "brow";
     const head = document.createElement("div"); head.className = "bhead";
@@ -614,19 +647,18 @@ function start(){
   reset();
   curTicker = t; valModel = null;
   runBtn.disabled = true; runBtn.textContent = "Meeting in session…";
-  ORDER.forEach(pendingCard);
+  $("desk-label").style.display = "flex"; $("bear-label").style.display = "flex";
+  ORDER.forEach(renderTile); renderTile("Bear");
   es = new EventSource("/api/meeting?ticker=" + encodeURIComponent(t));
   es.addEventListener("meta", (e) => { const d = JSON.parse(e.data); if(d.cached) showNotice(d.note || "Showing a saved run."); });
   es.addEventListener("profile", (e) => { renderProfile(JSON.parse(e.data)); });
-  es.addEventListener("valuation_model", (e) => { valModel = JSON.parse(e.data); });
-  es.addEventListener("analyst", (e) => { const d = JSON.parse(e.data); fillCard(d.name, d.view, d.error); });
-  es.addEventListener("bear", (e) => { const d = JSON.parse(e.data); fillCard("Bear", d.view, d.error); });
+  es.addEventListener("valuation_model", (e) => { valModel = JSON.parse(e.data); renderTile("Valuation"); if(openName === "Valuation") renderReader("Valuation"); });
+  es.addEventListener("analyst", (e) => { const d = JSON.parse(e.data); setMemo(d.name, d.view, d.error); });
+  es.addEventListener("bear", (e) => { const d = JSON.parse(e.data); setMemo("Bear", d.view, d.error); });
   es.addEventListener("error_msg", (e) => { showNotice(JSON.parse(e.data).message || "Something went wrong."); });
   es.addEventListener("done", (e) => {
     try { $("verdict-sub").textContent = JSON.parse(e.data).note || $("verdict-sub").textContent; } catch(_){}
-    updateTriage();
-    verdict.classList.add("show");
-    finish();
+    updateTriage(); verdict.classList.add("show"); finish();
   });
   es.onerror = () => { if(es && es.readyState === 2) finish(); };
 }
