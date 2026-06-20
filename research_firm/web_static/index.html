@@ -10,116 +10,59 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
-  /* ---------- warm cream palette ---------- */
-  --bg:#ece2cf;          /* warm cream base */
-  --surface:#f7efdd;     /* lighter cream card */
-  --surface-2:#e3d7bf;   /* sunken cream */
-  --hair:#ddd0b4;
-  --hair-soft:#e6dcc4;
-
-  --blue:#7f99ac;        /* soft slate-blue accent */
-  --blue-deep:#5f7d92;
-  --blue-soft:#e4ddca;
-
-  --ink:#4a4334;         /* warm espresso text */
-  --ink-2:#766c57;
-  --ink-3:#a39a82;
-  --ink-4:#c4b89c;
-
-  --up:#7a9b6f;          /* soft olive-sage */
-  --up-soft:#e6e0c8;
-  --down:#bd9079;        /* warm clay — the bear */
-  --down-soft:#ecdcc6;
-  --warn:#c79a5a;        /* honey */
-  --warn-soft:#ecdcbc;
-  --gold:#c79a5a;        /* watchlist star */
-
+  --bg:#ece2cf; --surface:#f7efdd; --surface-2:#e3d7bf; --hair:#ddd0b4; --hair-soft:#e6dcc4;
+  --blue:#7f99ac; --blue-deep:#5f7d92; --blue-soft:#e4ddca;
+  --ink:#4a4334; --ink-2:#766c57; --ink-3:#a39a82; --ink-4:#c4b89c;
+  --up:#7a9b6f; --up-soft:#e6e0c8; --down:#bd9079; --down-soft:#ecdcc6;
+  --warn:#c79a5a; --warn-soft:#ecdcbc; --gold:#c79a5a;
   --shadow:0 1px 2px rgba(74,67,52,.05),0 4px 14px rgba(74,67,52,.06);
-  --r:18px;
-  --pad:22px;
+  --r:18px; --pad:22px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{background:var(--bg);color:var(--ink)}
 body{font-family:'IBM Plex Sans',-apple-system,sans-serif;font-size:15px;line-height:1.55;
-  -webkit-font-smoothing:antialiased;max-width:720px;margin:0 auto;min-height:100vh;padding:34px 20px 90px}
+  -webkit-font-smoothing:antialiased;max-width:720px;margin:0 auto;min-height:100vh;padding:30px 20px 90px}
 .serif{font-family:'Fraunces',Georgia,serif}
 .mono{font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums}
 .dim{color:var(--ink-3)}
 
-/* ---------- header ---------- */
-header{margin-bottom:22px}
-.eyebrow{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;color:var(--ink-3);margin-bottom:9px}
-h1{font-family:'Fraunces',serif;font-size:34px;font-weight:500;letter-spacing:-.5px;line-height:1.08;margin-bottom:8px}
-.tagline{font-size:14.5px;color:var(--ink-2);max-width:60ch}
-.tagline b{color:var(--ink);font-weight:600}
+header{margin-bottom:16px}
+.eyebrow{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;color:var(--ink-3);margin-bottom:7px}
+h1{font-family:'Fraunces',serif;font-size:30px;font-weight:500;letter-spacing:-.5px;line-height:1.08}
 
-/* ---------- watchlist rail ---------- */
-.railwrap{display:none;align-items:center;gap:9px;flex-wrap:wrap;margin:0 0 4px}
-.rail-cap{font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:600;color:var(--ink-3)}
-.rail{display:flex;gap:7px;flex-wrap:wrap}
-.chip{display:inline-flex;align-items:center;gap:7px;background:var(--surface-2);border:1px solid var(--hair);
-  border-radius:11px;padding:5px 8px 5px 11px;font-family:'IBM Plex Mono',monospace;font-size:12px;
-  font-weight:500;color:var(--ink-2);cursor:pointer;transition:.15s}
-.chip:hover{border-color:var(--blue);color:var(--ink)}
-.chip .x{color:var(--ink-4);font-family:'IBM Plex Sans',sans-serif;font-size:13px;line-height:1;cursor:pointer;padding:0 1px}
-.chip .x:hover{color:var(--down)}
+/* ---------- tab nav ---------- */
+.tabs{display:flex;gap:5px;flex-wrap:wrap;background:var(--surface-2);border-radius:14px;padding:4px;margin-bottom:20px}
+.tab{flex:1;min-width:72px;background:none;border:none;border-radius:11px;padding:9px 10px;cursor:pointer;
+  font-family:inherit;font-weight:600;font-size:12.5px;color:var(--ink-3);transition:.15s;white-space:nowrap}
+.tab:hover{color:var(--ink-2)}
+.tab.on{background:var(--surface);color:var(--blue-deep);box-shadow:var(--shadow)}
+.tab .n{display:inline-block;margin-left:5px;font-size:11px;color:var(--ink-4);font-weight:500}
+.tab.on .n{color:var(--blue)}
+
+.tab-panel{display:none}
+.tab-panel.on{display:block;animation:fade .25s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.panel-cap{font-family:'Fraunces',serif;font-size:20px;font-weight:500;margin:2px 0 3px}
+.panel-sub{font-size:13px;color:var(--ink-3);margin-bottom:16px}
 
 /* ---------- search bar ---------- */
-.bar{display:flex;gap:10px;margin:18px 0 6px}
+.bar{display:flex;gap:10px;margin:0 0 6px}
 .bar input{flex:1;background:var(--surface);border:1px solid var(--hair);color:var(--ink);
   border-radius:14px;padding:13px 15px;font-family:'IBM Plex Mono',monospace;font-size:16px;
   font-weight:500;letter-spacing:1px;text-transform:uppercase;box-shadow:var(--shadow)}
 .bar input::placeholder{color:var(--ink-4);letter-spacing:.5px}
 .bar input:focus{outline:none;border-color:var(--blue)}
-.bar button{background:var(--blue-deep);color:#fbf6ea;border:none;border-radius:14px;
-  padding:0 22px;font-family:inherit;font-weight:600;font-size:14px;cursor:pointer;
-  box-shadow:var(--shadow);transition:.15s;white-space:nowrap}
+.bar button{background:var(--blue-deep);color:#fbf6ea;border:none;border-radius:14px;padding:0 22px;
+  font-family:inherit;font-weight:600;font-size:14px;cursor:pointer;box-shadow:var(--shadow);transition:.15s;white-space:nowrap}
 .bar button:hover{background:#54707f}
 .bar button:disabled{opacity:.55;cursor:default}
-.hint{font-size:12px;color:var(--ink-3);margin-left:4px}
+.hint{font-size:12px;color:var(--ink-3);margin:0 0 0 4px}
 .hint b{color:var(--ink-2);font-weight:600;cursor:pointer}
 .hint b:hover{color:var(--blue-deep)}
 
-/* ---------- holdings panel ---------- */
-.holdings{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);margin:14px 0 0;overflow:hidden}
-.holdings summary{cursor:pointer;list-style:none;padding:13px var(--pad);font-weight:600;font-size:13px;
-  color:var(--ink-2);display:flex;align-items:center;gap:8px}
-.holdings summary::-webkit-details-marker{display:none}
-.holdings summary::before{content:"▸";color:var(--ink-3);font-size:11px;transition:.15s}
-.holdings[open] summary::before{transform:rotate(90deg)}
-.holdings summary .hcount{color:var(--ink-3);font-weight:500}
-.hold-body{padding:2px var(--pad) 16px}
-.hold-form{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.hold-form input{background:var(--bg);border:1px solid var(--hair);border-radius:10px;padding:8px 10px;
-  font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink)}
-.hold-form input:focus{outline:none;border-color:var(--blue)}
-.hold-form .f-tk{width:92px;text-transform:uppercase}
-.hold-form .f-n{width:84px}
-.hold-form button{background:var(--blue-deep);color:#fbf6ea;border:none;border-radius:10px;padding:8px 14px;
-  font-family:inherit;font-weight:600;font-size:13px;cursor:pointer}
-.hold-form button:hover{background:#54707f}
-.hrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 0;border-top:1px solid var(--hair-soft);font-size:13px}
-.hrow .h-tk{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--ink);min-width:52px}
-.hrow .h-pos{color:var(--ink-3);font-size:12.5px}
-.hrow .h-now{font-family:'IBM Plex Mono',monospace;color:var(--ink-2)}
-.hrow .h-val{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--ink);margin-left:auto}
-.hrow .h-gain{font-family:'IBM Plex Mono',monospace;font-size:12.5px;min-width:62px;text-align:right}
-.hrow .h-gain.up{color:var(--up)}.hrow .h-gain.down{color:var(--down)}
-.hrow .h-review{background:var(--surface-2);border:1px solid var(--hair);border-radius:9px;padding:4px 10px;
-  font-family:inherit;font-size:12px;font-weight:600;color:var(--ink-2);cursor:pointer}
-.hrow .h-review:hover{border-color:var(--blue);color:var(--ink)}
-.hrow .h-x{background:none;border:none;color:var(--ink-4);font-size:14px;cursor:pointer;padding:0 2px}
-.hrow .h-x:hover{color:var(--down)}
-.h-total{display:flex;justify-content:space-between;padding:11px 0 2px;margin-top:4px;border-top:1.5px solid var(--hair);
-  font-size:13px;font-weight:600;color:var(--ink)}
-.h-total .v{font-family:'IBM Plex Mono',monospace}
-.hold-empty{color:var(--ink-3);font-size:13px;padding:6px 0 2px;line-height:1.5}
-.hold-note{font-size:11.5px;color:var(--ink-4);margin-top:12px;line-height:1.5}
-
 /* ---------- notices ---------- */
-.notice{display:none;align-items:center;gap:9px;background:var(--warn-soft);
-  border:1px solid var(--warn);border-radius:13px;padding:11px 14px;margin:18px 0 4px;
-  font-size:13px;color:var(--ink);font-weight:500}
+.notice{display:none;align-items:center;gap:9px;background:var(--warn-soft);border:1px solid var(--warn);
+  border-radius:13px;padding:11px 14px;margin:18px 0 4px;font-size:13px;color:var(--ink);font-weight:500}
 .notice.show{display:flex}
 .notice .dot{width:8px;height:8px;border-radius:50%;background:var(--warn);flex:none}
 
@@ -128,8 +71,7 @@ h1{font-family:'Fraunces',serif;font-size:34px;font-weight:500;letter-spacing:-.
   padding:16px var(--pad);margin:20px 0 6px;align-items:baseline;gap:10px;flex-wrap:wrap}
 .profile.show{display:flex}
 .profile .tk{font-family:'Fraunces',serif;font-size:22px;font-weight:600}
-.profile .star{background:none;border:none;cursor:pointer;font-size:18px;line-height:1;color:var(--ink-4);
-  padding:0;align-self:center;transition:.15s}
+.profile .star{background:none;border:none;cursor:pointer;font-size:18px;line-height:1;color:var(--ink-4);padding:0;align-self:center;transition:.15s}
 .profile .star.on{color:var(--gold)}
 .profile .star:hover{transform:scale(1.15)}
 .profile .nm{font-size:14px;color:var(--ink-2);font-weight:500}
@@ -138,9 +80,8 @@ h1{font-family:'Fraunces',serif;font-size:34px;font-weight:500;letter-spacing:-.
 
 /* ---------- analyst cards ---------- */
 .cards{display:flex;flex-direction:column;gap:13px;margin-top:18px}
-.card{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);
-  padding:20px var(--pad);border-left:3px solid var(--hair);
-  animation:rise .45s cubic-bezier(.2,.7,.3,1) both}
+.card{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:20px var(--pad);
+  border-left:3px solid var(--hair);animation:rise .45s cubic-bezier(.2,.7,.3,1) both}
 @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .card .role{display:flex;align-items:baseline;gap:9px;margin-bottom:12px}
 .card .role .name{font-family:'Fraunces',serif;font-size:18px;font-weight:600;letter-spacing:-.2px}
@@ -153,25 +94,23 @@ h1{font-family:'Fraunces',serif;font-size:34px;font-weight:500;letter-spacing:-.
 .card.checklist{border-left-color:var(--ink-4)}
 .card.bear{border-left:3px solid var(--down);background:var(--down-soft)}
 .card.bear .name{color:#9c5f44}
-
-/* rich-text rendering of the analyst markdown (clean typography, no raw # or ** or ---) */
-.body > :first-child{margin-top:0}
-.body > :last-child{margin-bottom:0}
+.body > :first-child{margin-top:0}.body > :last-child{margin-bottom:0}
 .body p{margin:0 0 11px}
 .body strong{color:var(--ink);font-weight:600}
 .body em{font-style:italic}
-.body ul,.body ol{margin:8px 0 12px;padding-left:20px}
-.body li{margin:4px 0}
-.body li::marker{color:var(--ink-4)}
+.body ul,.body ol{margin:8px 0 12px;padding-left:20px}.body li{margin:4px 0}.body li::marker{color:var(--ink-4)}
 .body blockquote{margin:11px 0;padding:3px 0 3px 14px;border-left:2px solid var(--hair);color:var(--ink-2)}
 .body code{font-family:'IBM Plex Mono',monospace;font-size:.9em;background:var(--surface-2);padding:1px 5px;border-radius:5px}
 .body hr{border:none;border-top:1px solid var(--hair-soft);margin:14px 0}
 .body .mdh{font-family:'Fraunces',serif;color:var(--ink);line-height:1.25;margin:16px 0 8px;letter-spacing:-.2px}
-.body .mdh1{font-size:17px;font-weight:600}
-.body .mdh2{font-size:15px;font-weight:600}
+.body .mdh1{font-size:17px;font-weight:600}.body .mdh2{font-size:15px;font-weight:600}
 .body .mdh3{font-family:'IBM Plex Sans',sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:600;color:var(--ink-3);margin:18px 0 7px}
+.card.pending{border-left-color:var(--blue);opacity:.85}.card.pending .body{color:var(--ink-3)}
+.dots span{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--ink-3);margin-right:3px;animation:blink 1.2s infinite both}
+.dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
 
-/* ---------- DCF model panel (on the Valuation card) ---------- */
+/* ---------- DCF panel ---------- */
 .dcf{background:var(--bg);border:1px solid var(--hair);border-radius:13px;padding:14px 16px;margin-bottom:15px}
 .dcf-h{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:600;color:var(--ink-3);margin-bottom:10px}
 .dcf-tag{font-size:9.5px;letter-spacing:.5px;background:var(--surface-2);color:var(--ink-3);padding:2px 7px;border-radius:8px}
@@ -179,91 +118,162 @@ h1{font-family:'Fraunces',serif;font-size:34px;font-weight:500;letter-spacing:-.
 .dcf-range b{font-family:'IBM Plex Mono',monospace;color:var(--ink);font-weight:600;font-size:16px}
 .dcf-base{color:var(--ink-3);font-size:13px}
 .dcf-price{font-size:12.5px;color:var(--ink-3);margin-top:4px}
-.dcf-price .pos{font-weight:600}
-.dcf-price .above{color:var(--down)}.dcf-price .below{color:var(--up)}.dcf-price .within{color:var(--ink-2)}
+.dcf-price .pos{font-weight:600}.dcf-price .above{color:var(--down)}.dcf-price .below{color:var(--up)}.dcf-price .within{color:var(--ink-2)}
 .dcf-assume{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-3);margin-top:10px;line-height:1.5}
 .dcf-grid{margin-top:12px;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:11px}
 .dcf-grid caption{caption-side:top;text-align:left;font-family:'IBM Plex Sans',sans-serif;font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-4);font-weight:600;margin-bottom:5px}
 .dcf-grid th,.dcf-grid td{padding:4px 9px;text-align:right;color:var(--ink-2);white-space:nowrap}
-.dcf-grid th{color:var(--ink-3);font-weight:600}
-.dcf-grid th.corner{color:var(--ink-4);font-weight:500;text-align:left}
+.dcf-grid th{color:var(--ink-3);font-weight:600}.dcf-grid th.corner{color:var(--ink-4);font-weight:500;text-align:left}
 .dcf-grid td.base{background:var(--surface-2);color:var(--ink);font-weight:600;border-radius:5px}
 .dcf-note{font-size:11px;color:var(--ink-4);margin-top:11px;line-height:1.5}
 .dcf-na{font-size:12.5px;color:var(--ink-3);font-style:italic}
 
-/* the live "thinking" placeholder card */
-.card.pending{border-left-color:var(--blue);opacity:.85}
-.card.pending .body{color:var(--ink-3)}
-.dots span{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--ink-3);
-  margin-right:3px;animation:blink 1.2s infinite both}
-.dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
-@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
-
-/* ---------- verdict banner ---------- */
-.verdict{display:none;text-align:center;margin:26px 0 8px;padding:22px;
-  border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+/* ---------- verdict + triage ---------- */
+.verdict{display:none;text-align:center;margin:26px 0 8px;padding:22px;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
 .verdict.show{display:block}
 .verdict .big{font-family:'Fraunces',serif;font-size:22px;font-weight:500;letter-spacing:-.3px}
 .verdict .sub{font-size:13px;color:var(--ink-3);margin-top:7px}
+.triage{display:flex;gap:9px;justify-content:center;margin-top:16px}
+.triage button{background:var(--surface-2);border:1px solid var(--hair);border-radius:11px;padding:8px 15px;
+  font-family:inherit;font-weight:600;font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s}
+.triage button:hover{border-color:var(--blue);color:var(--ink)}
+.triage button.on{background:var(--up-soft);border-color:var(--up);color:#5e7a54}
+
+/* ---------- saved lists (watchlist / radar) ---------- */
+.list{display:flex;flex-direction:column;gap:10px}
+.li{display:flex;align-items:center;gap:12px;background:var(--surface);border-radius:14px;box-shadow:var(--shadow);
+  padding:14px 16px;cursor:pointer;transition:.15s;border:1px solid transparent}
+.li:hover{border-color:var(--blue)}
+.li .li-tk{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:15px;color:var(--ink);min-width:60px}
+.li .li-nm{font-size:13px;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.li .li-sec{font-size:11px;color:var(--ink-4);margin-top:2px}
+.li .li-mid{flex:1;min-width:0}
+.li .li-px{font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--ink-2);font-weight:500;white-space:nowrap}
+.li .li-go{background:var(--surface-2);border:1px solid var(--hair);border-radius:9px;padding:5px 11px;font-family:inherit;font-size:12px;font-weight:600;color:var(--ink-2);cursor:pointer;white-space:nowrap}
+.li .li-go:hover{border-color:var(--blue);color:var(--ink)}
+.li .li-x{background:none;border:none;color:var(--ink-4);font-size:14px;cursor:pointer;padding:0 2px}
+.li .li-x:hover{color:var(--down)}
+.empty{color:var(--ink-3);font-size:13.5px;line-height:1.6;background:var(--surface);border-radius:14px;padding:20px var(--pad);text-align:center}
+.empty b{color:var(--ink-2);font-weight:600;cursor:pointer}
+.empty b:hover{color:var(--blue-deep)}
+
+/* ---------- book (holdings) ---------- */
+.hold-form{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.hold-form input{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:9px 11px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--ink)}
+.hold-form input:focus{outline:none;border-color:var(--blue)}
+.hold-form .f-tk{width:96px;text-transform:uppercase}.hold-form .f-n{width:88px}
+.hold-form button{background:var(--blue-deep);color:#fbf6ea;border:none;border-radius:10px;padding:9px 15px;font-family:inherit;font-weight:600;font-size:13px;cursor:pointer}
+.hold-form button:hover{background:#54707f}
+.hrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:11px 2px;border-top:1px solid var(--hair-soft);font-size:13px}
+.hrow .h-tk{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--ink);min-width:52px}
+.hrow .h-pos{color:var(--ink-3);font-size:12.5px}
+.hrow .h-now{font-family:'IBM Plex Mono',monospace;color:var(--ink-2)}
+.hrow .h-val{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--ink);margin-left:auto}
+.hrow .h-gain{font-family:'IBM Plex Mono',monospace;font-size:12.5px;min-width:62px;text-align:right}
+.hrow .h-gain.up{color:var(--up)}.hrow .h-gain.down{color:var(--down)}
+.hrow .h-review{background:var(--surface-2);border:1px solid var(--hair);border-radius:9px;padding:4px 10px;font-family:inherit;font-size:12px;font-weight:600;color:var(--ink-2);cursor:pointer}
+.hrow .h-review:hover{border-color:var(--blue);color:var(--ink)}
+.hrow .h-x{background:none;border:none;color:var(--ink-4);font-size:14px;cursor:pointer;padding:0 2px}.hrow .h-x:hover{color:var(--down)}
+.h-total{display:flex;justify-content:space-between;padding:12px 2px 2px;margin-top:4px;border-top:1.5px solid var(--hair);font-size:13px;font-weight:600;color:var(--ink)}
+.h-total .v{font-family:'IBM Plex Mono',monospace}
+.hold-note{font-size:11.5px;color:var(--ink-4);margin-top:14px;line-height:1.5}
+
+/* ---------- balance (sector distribution) ---------- */
+.balance{display:flex;flex-direction:column;gap:13px}
+.brow{display:flex;flex-direction:column;gap:5px}
+.brow .bhead{display:flex;justify-content:space-between;font-size:13px}
+.brow .bsec{font-weight:600;color:var(--ink)}
+.brow .bpct{font-family:'IBM Plex Mono',monospace;color:var(--ink-2)}
+.brow .btrack{height:9px;background:var(--surface-2);border-radius:6px;overflow:hidden}
+.brow .bfill{height:100%;border-radius:6px}
+.brow .bval{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-4)}
+.bnote{font-size:11.5px;color:var(--ink-4);margin-top:16px;line-height:1.5}
 
 footer{margin-top:34px;font-size:12px;color:var(--ink-3);line-height:1.6}
 footer b{color:var(--ink-2);font-weight:600}
-footer a{color:var(--blue-deep);text-decoration:none}
-footer a:hover{text-decoration:underline}
+footer a{color:var(--blue-deep);text-decoration:none}footer a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
 <header>
   <div class="eyebrow">Multi-agent research desk</div>
   <h1 class="serif">Finance AI Research Agent</h1>
-  <p class="tagline">A panel of analyst agents argues a stock from every side — Bull, Valuation,
-    Macro, a quality Checklist — then a <b>Bear</b> is handed their cases and told to tear them
-    apart. You get the strongest case each way, and <b>never a rating</b>. The call stays yours.</p>
 </header>
 
-<div class="railwrap" id="railwrap">
-  <span class="rail-cap">★ Watchlist</span>
-  <div class="rail" id="rail"></div>
-</div>
+<nav class="tabs" id="tabs">
+  <button class="tab on" data-tab="research">Research</button>
+  <button class="tab" data-tab="watchlist">Watchlist<span class="n" id="n-watch"></span></button>
+  <button class="tab" data-tab="radar">Radar<span class="n" id="n-radar"></span></button>
+  <button class="tab" data-tab="book">Book<span class="n" id="n-book"></span></button>
+  <button class="tab" data-tab="balance">Balance</button>
+</nav>
 
-<div class="bar">
-  <input id="ticker" placeholder="Enter a ticker…" maxlength="8" autocomplete="off"
-         spellcheck="false" aria-label="Stock ticker">
-  <button id="run">Hold the meeting</button>
-</div>
-<div class="hint">Try <b data-t="AAPL">AAPL</b> · <b data-t="NVDA">NVDA</b> · <b data-t="MSFT">MSFT</b></div>
-
-<details class="holdings" id="holdings">
-  <summary>Your holdings <span class="hcount" id="hold-count"></span></summary>
-  <div class="hold-body">
-    <form class="hold-form" id="hold-form">
-      <input class="f-tk" id="h-ticker" placeholder="TICKER" maxlength="8" autocomplete="off" spellcheck="false" aria-label="Holding ticker">
-      <input class="f-n" id="h-shares" type="number" step="any" min="0" placeholder="shares" aria-label="Shares">
-      <input class="f-n" id="h-cost" type="number" step="any" min="0" placeholder="cost / sh" aria-label="Cost per share">
-      <button type="submit">Add</button>
-    </form>
-    <div id="hold-table"></div>
-    <div class="hold-note">Per-holding figures only. This reviews each position on its own and shows
-      naive cost-basis math — it never scores, rates, or ranks your portfolio. Not investment advice.</div>
+<!-- ============ RESEARCH ============ -->
+<section class="tab-panel on" data-tab="research">
+  <div class="bar">
+    <input id="ticker" placeholder="Enter a ticker…" maxlength="8" autocomplete="off" spellcheck="false" aria-label="Stock ticker">
+    <button id="run">Hold the meeting</button>
   </div>
-</details>
+  <div class="hint">Try <b data-t="AAPL">AAPL</b> · <b data-t="NVDA">NVDA</b> · <b data-t="MSFT">MSFT</b></div>
 
-<div class="notice" id="notice"><span class="dot"></span><span id="notice-text"></span></div>
+  <div class="notice" id="notice"><span class="dot"></span><span id="notice-text"></span></div>
 
-<div class="profile" id="profile">
-  <span class="tk mono" id="p-tk"></span>
-  <button class="star" id="star" title="Add to watchlist" aria-label="Toggle watchlist">☆</button>
-  <span class="nm" id="p-nm"></span>
-  <span class="px mono" id="p-px"></span>
-  <span class="meta" id="p-meta"></span>
-</div>
+  <div class="profile" id="profile">
+    <span class="tk mono" id="p-tk"></span>
+    <button class="star" id="star" title="Add to watchlist" aria-label="Toggle watchlist">☆</button>
+    <span class="nm" id="p-nm"></span>
+    <span class="px mono" id="p-px"></span>
+    <span class="meta" id="p-meta"></span>
+  </div>
 
-<div class="cards" id="cards"></div>
+  <div class="cards" id="cards"></div>
 
-<div class="verdict" id="verdict">
-  <div class="big serif">No verdict. No rating.</div>
-  <div class="sub" id="verdict-sub">The strongest case each way is above — the decision is yours.</div>
-</div>
+  <div class="verdict" id="verdict">
+    <div class="big serif">No verdict. No rating.</div>
+    <div class="sub" id="verdict-sub">The strongest case each way is above — the decision is yours.</div>
+    <div class="triage">
+      <button id="tri-watch">★ Watchlist</button>
+      <button id="tri-radar">✦ Radar</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WATCHLIST ============ -->
+<section class="tab-panel" data-tab="watchlist">
+  <div class="panel-cap">Watchlist</div>
+  <div class="panel-sub">Names you're committed to following. Tap one to run the desk again.</div>
+  <div class="list" id="watch-list"></div>
+</section>
+
+<!-- ============ RADAR ============ -->
+<section class="tab-panel" data-tab="radar">
+  <div class="panel-cap">Radar</div>
+  <div class="panel-sub">On your radar — watching, not yet committed. Tap one to research it.</div>
+  <div class="list" id="radar-list"></div>
+</section>
+
+<!-- ============ BOOK ============ -->
+<section class="tab-panel" data-tab="book">
+  <div class="panel-cap">Book</div>
+  <div class="panel-sub">Positions you hold. Per-holding figures only — never a portfolio score.</div>
+  <form class="hold-form" id="hold-form">
+    <input class="f-tk" id="h-ticker" placeholder="TICKER" maxlength="8" autocomplete="off" spellcheck="false" aria-label="Holding ticker">
+    <input class="f-n" id="h-shares" type="number" step="any" min="0" placeholder="shares" aria-label="Shares">
+    <input class="f-n" id="h-cost" type="number" step="any" min="0" placeholder="cost / sh" aria-label="Cost per share">
+    <button type="submit">Add</button>
+  </form>
+  <div id="hold-table"></div>
+  <div class="hold-note">Per-holding value and naive cost-basis math, valued off the last price seen for
+    each ticker. It reviews each position on its own — it never scores, rates, or ranks your book.
+    Not investment advice.</div>
+</section>
+
+<!-- ============ BALANCE ============ -->
+<section class="tab-panel" data-tab="balance">
+  <div class="panel-cap">Balance</div>
+  <div class="panel-sub">Where your book sits by sector — a description of the mix, nothing more.</div>
+  <div class="balance" id="balance"></div>
+</section>
 
 <footer>
   <b>Not investment advice.</b> Output is AI-generated analysis for thinking, not a recommendation
@@ -280,24 +290,21 @@ const JOBS = {
   Bear: "fed the bull + valuation, told to attack",
 };
 const ORDER = ["Bull", "Valuation", "Macro", "Checklist"];
-const WATCH_KEY = "far_watch", HOLD_KEY = "far_holdings", PX_KEY = "far_px";
-const WATCH_MAX = 12;
+const HOLD_KEY = "far_holdings", META_KEY = "far_meta";
+const LIST_KEY = { watch: "far_watch", radar: "far_radar" };
+const LIST_MAX = 40;
+const SECTOR_COLORS = ["#7f99ac", "#7a9b6f", "#c79a5a", "#bd9079", "#9d86a8", "#86a8a0", "#c4b89c", "#8c97c4"];
 
 const $ = (id) => document.getElementById(id);
 const input = $("ticker"), runBtn = $("run"), cards = $("cards");
 const profile = $("profile"), notice = $("notice"), verdict = $("verdict");
-let es = null;          // active EventSource
-let curTicker = "";     // ticker currently on screen
-let curProfile = {};    // its profile (for the watchlist star)
-let valModel = null;    // the DCF model for this run (shown on the Valuation card)
+let es = null, curTicker = "", curProfile = {}, valModel = null;
 
-// ---------- tiny localStorage wrapper (everything user-specific lives in the browser, no DB) ----------
 const LS = {
   get(k, d){ try{ const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; }catch(_){ return d; } },
   set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(_){} },
 };
 const cleanTicker = (t) => (t || "").toUpperCase().replace(/[^A-Z0-9.\-]/g, "").slice(0, 8);
-
 function money(n, cur){
   if(n == null || isNaN(n)) return "";
   const c = cur && cur !== "USD" ? " " + cur : "";
@@ -311,16 +318,21 @@ function bigMoney(n){
 }
 const pctOf = (x) => (x*100).toFixed(1) + "%";
 
+// ---------- tabs ----------
+function showTab(name){
+  document.querySelectorAll(".tab-panel").forEach((p) => p.classList.toggle("on", p.dataset.tab === name));
+  document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("on", t.dataset.tab === name));
+  if(name === "watchlist") renderList("watch");
+  if(name === "radar") renderList("radar");
+  if(name === "book") renderHoldings();
+  if(name === "balance") renderBalance();
+  window.scrollTo(0, 0);
+}
+
 // ---------- markdown -> clean typography ----------
-// The model replies in Markdown. We escape every HTML-special char FIRST, then introduce only our
-// own small, known set of tags — so the rendered output is styled, never raw "#"/"**"/"---", and a
-// stray "<" in the text can't become live markup.
-// Escape & and < (so no tag can form — a "<" is the only way to open one); leave ">" literal so a
-// blockquote's leading ">" survives to be parsed below. Content stays inert either way.
 function esc(t){ return (t || "").replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
 function mdInline(s){
-  return s
-    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+  return s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
     .replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, "$1<em>$2</em>")
     .replace(/(^|[^_])_([^_\n]+)_(?!_)/g, "$1<em>$2</em>")
     .replace(/`([^`]+)`/g, "<code>$1</code>");
@@ -345,7 +357,7 @@ function renderMarkdown(text){
   return html;
 }
 
-// ---------- render helpers ----------
+// ---------- research: cards ----------
 function reset(){
   if(es){ es.close(); es = null; }
   cards.innerHTML = "";
@@ -353,18 +365,11 @@ function reset(){
   notice.classList.remove("show");
   verdict.classList.remove("show");
 }
-
 function cardFor(name){
   let el = document.getElementById("card-" + name);
-  if(!el){
-    el = document.createElement("div");
-    el.id = "card-" + name;
-    el.className = "card " + name.toLowerCase();
-    cards.appendChild(el);
-  }
+  if(!el){ el = document.createElement("div"); el.id = "card-" + name; el.className = "card " + name.toLowerCase(); cards.appendChild(el); }
   return el;
 }
-
 function roleEl(name){
   const role = document.createElement("div"); role.className = "role";
   const nm = document.createElement("span"); nm.className = "name serif"; nm.textContent = name;
@@ -372,16 +377,12 @@ function roleEl(name){
   role.append(nm, job);
   return role;
 }
-
-// The DCF panel that rides on top of the Valuation card. All values come from our own backend, but
-// it's built with textContent / typed DOM nodes regardless — no string-HTML.
 function dcfPanel(vm){
   const wrap = document.createElement("div"); wrap.className = "dcf";
   const h = document.createElement("div"); h.className = "dcf-h";
   const ht = document.createElement("span"); ht.textContent = "Discounted cash flow";
   const tag = document.createElement("span"); tag.className = "dcf-tag"; tag.textContent = "model, not a target";
   h.append(ht, tag); wrap.append(h);
-
   if(!vm || !vm.available){
     const na = document.createElement("div"); na.className = "dcf-na";
     na.textContent = "Not applicable here — no positive trailing free cash flow to discount.";
@@ -389,79 +390,57 @@ function dcfPanel(vm){
   }
   const cur = vm.currency;
   const range = document.createElement("div"); range.className = "dcf-range";
-  const lab = document.createTextNode("Intrinsic value ");
   const b = document.createElement("b"); b.textContent = money(vm.value_low, cur) + "–" + money(vm.value_high, cur);
-  const sh = document.createTextNode(" / share ");
   const base = document.createElement("span"); base.className = "dcf-base"; base.textContent = "· base ~" + money(vm.value_base, cur);
-  range.append(lab, b, sh, base); wrap.append(range);
-
+  range.append(document.createTextNode("Intrinsic value "), b, document.createTextNode(" / share "), base); wrap.append(range);
   if(vm.price != null){
     const where = vm.price < vm.value_low ? "below" : vm.price > vm.value_high ? "above" : "within";
     const p = document.createElement("div"); p.className = "dcf-price";
     p.append(document.createTextNode("Price " + money(vm.price, cur) + " sits "));
     const w = document.createElement("span"); w.className = "pos " + where; w.textContent = where;
-    p.append(w, document.createTextNode(" the range."));
-    wrap.append(p);
+    p.append(w, document.createTextNode(" the range.")); wrap.append(p);
   }
-
   const a = document.createElement("div"); a.className = "dcf-assume";
-  a.textContent = "FCF " + bigMoney(vm.fcf) + " · WACC " + pctOf(vm.discount_rate)
-    + " · growth " + pctOf(vm.growth) + "→" + pctOf(vm.terminal_growth) + " · " + vm.years + "y"
-    + " · net debt " + bigMoney(vm.net_debt);
+  a.textContent = "FCF " + bigMoney(vm.fcf) + " · WACC " + pctOf(vm.discount_rate) + " · growth "
+    + pctOf(vm.growth) + "→" + pctOf(vm.terminal_growth) + " · " + vm.years + "y · net debt " + bigMoney(vm.net_debt);
   wrap.append(a);
-
-  // sensitivity grid: discount (rows) x growth (cols) -> per-share value, base cell highlighted
   if(vm.grid && vm.grid.length){
     const t = document.createElement("table"); t.className = "dcf-grid";
-    const cap = document.createElement("caption"); cap.textContent = "value / share · discount × growth";
-    t.append(cap);
+    const cap = document.createElement("caption"); cap.textContent = "value / share · discount × growth"; t.append(cap);
     const head = document.createElement("tr");
-    const corner = document.createElement("th"); corner.className = "corner"; corner.textContent = "disc \\ grow";
-    head.append(corner);
+    const corner = document.createElement("th"); corner.className = "corner"; corner.textContent = "disc \\ grow"; head.append(corner);
     vm.grid_growths.forEach((g) => { const th = document.createElement("th"); th.textContent = pctOf(g); head.append(th); });
     t.append(head);
     vm.grid.forEach((row, i) => {
       const tr = document.createElement("tr");
       const rh = document.createElement("th"); rh.textContent = pctOf(vm.grid_discounts[i]); tr.append(rh);
-      row.forEach((v, j) => {
-        const td = document.createElement("td");
-        if(i === 1 && j === 1) td.className = "base";          // centre cell = base assumptions
-        td.textContent = money(v, cur);
-        tr.append(td);
-      });
+      row.forEach((v, j) => { const td = document.createElement("td"); if(i === 1 && j === 1) td.className = "base"; td.textContent = money(v, cur); tr.append(td); });
       t.append(tr);
     });
     wrap.append(t);
   }
-
   const note = document.createElement("div"); note.className = "dcf-note";
   note.textContent = "Whole-company two-stage DCF on trailing free cash flow, with stated assumptions you can argue with. A range, not a price target. Not investment advice.";
-  wrap.append(note);
-  return wrap;
+  wrap.append(note); return wrap;
 }
-
 function fillCard(name, view, error){
   const el = cardFor(name);
   el.className = "card " + name.toLowerCase() + (error ? " err" : "");
   const body = document.createElement("div"); body.className = "body";
-  if(error) body.textContent = "Unavailable — " + error;        // plain text for the failure note
-  else body.innerHTML = renderMarkdown(view || "");             // safe: escaped, then our tags only
+  if(error) body.textContent = "Unavailable — " + error;
+  else body.innerHTML = renderMarkdown(view || "");
   const parts = [roleEl(name)];
-  if(name === "Valuation" && valModel) parts.push(dcfPanel(valModel));   // model above the prose
+  if(name === "Valuation" && valModel) parts.push(dcfPanel(valModel));
   parts.push(body);
   el.replaceChildren(...parts);
 }
-
 function pendingCard(name){
   const el = cardFor(name);
   el.className = "card pending " + name.toLowerCase();
-  const dots = document.createElement("div"); dots.className = "body dots";
-  dots.innerHTML = "<span></span><span></span><span></span>";
+  const dots = document.createElement("div"); dots.className = "body dots"; dots.innerHTML = "<span></span><span></span><span></span>";
   el.replaceChildren(roleEl(name), dots);
 }
-
 function showNotice(text){ $("notice-text").textContent = text; notice.classList.add("show"); }
-
 function renderProfile(p){
   curTicker = cleanTicker(p.ticker || curTicker);
   curProfile = p || {};
@@ -470,186 +449,199 @@ function renderProfile(p){
   $("p-px").textContent = money(p.price, p.currency);
   $("p-meta").textContent = [p.sector, p.industry].filter(Boolean).join(" · ");
   profile.classList.add("show");
+  // cache name/sector/price so the lists and Balance view can use them
+  const meta = LS.get(META_KEY, {}), prev = meta[curTicker] || {};
+  meta[curTicker] = {
+    name: p.name || prev.name || "", sector: p.sector || prev.sector || null,
+    currency: p.currency || prev.currency || null,
+    price: p.price != null ? p.price : (prev.price != null ? prev.price : null),
+    ts: Date.now(),
+  };
+  LS.set(META_KEY, meta);
   updateStar();
 }
 
-// ---------- watchlist ----------
-const getWatch = () => LS.get(WATCH_KEY, []);
-const inWatch = (t) => getWatch().some((w) => w.ticker === t);
+// ---------- saved lists ----------
+const getList = (kind) => LS.get(LIST_KEY[kind], []);
+const inList = (kind, t) => getList(kind).some((x) => x.ticker === t);
+function toggleList(kind, t, meta){
+  t = cleanTicker(t); if(!t) return;
+  const arr = getList(kind), i = arr.findIndex((x) => x.ticker === t);
+  if(i >= 0) arr.splice(i, 1);
+  else arr.unshift({ ticker: t, name: (meta && meta.name) || "", ts: Date.now() });
+  LS.set(LIST_KEY[kind], arr.slice(0, LIST_MAX));
+  refreshCounts();
+}
+function refreshCounts(){
+  const w = getList("watch").length, r = getList("radar").length, b = getHoldings().length;
+  $("n-watch").textContent = w ? w : "";
+  $("n-radar").textContent = r ? r : "";
+  $("n-book").textContent = b ? b : "";
+}
+function researchTicker(t){ showTab("research"); input.value = t; start(); }
+function renderList(kind){
+  const host = kind === "watch" ? $("watch-list") : $("radar-list");
+  const items = getList(kind), meta = LS.get(META_KEY, {});
+  host.replaceChildren();
+  if(!items.length){
+    const e = document.createElement("div"); e.className = "empty";
+    e.textContent = kind === "watch"
+      ? "Nothing here yet. Run a meeting and tap ★ Watchlist to pin a name."
+      : "Radar's empty. Run a meeting and tap ✦ Radar for names you're still weighing.";
+    host.appendChild(e); return;
+  }
+  items.forEach((it) => {
+    const m = meta[it.ticker] || {};
+    const row = document.createElement("div"); row.className = "li";
+    row.addEventListener("click", () => researchTicker(it.ticker));
+    const tk = document.createElement("span"); tk.className = "li-tk"; tk.textContent = it.ticker;
+    const mid = document.createElement("div"); mid.className = "li-mid";
+    const nm = document.createElement("div"); nm.className = "li-nm"; nm.textContent = m.name || it.name || "—";
+    mid.append(nm);
+    if(m.sector){ const sec = document.createElement("div"); sec.className = "li-sec"; sec.textContent = m.sector; mid.append(sec); }
+    const px = document.createElement("span"); px.className = "li-px"; px.textContent = m.price != null ? money(m.price, m.currency) : "";
+    const go = document.createElement("button"); go.className = "li-go"; go.textContent = "Research";
+    go.addEventListener("click", (e) => { e.stopPropagation(); researchTicker(it.ticker); });
+    const x = document.createElement("button"); x.className = "li-x"; x.textContent = "✕"; x.title = "Remove";
+    x.addEventListener("click", (e) => { e.stopPropagation(); toggleList(kind, it.ticker); renderList(kind); });
+    row.append(tk, mid, px, go, x);
+    host.appendChild(row);
+  });
+}
 
+// ---------- star + triage ----------
 function updateStar(){
-  const on = inWatch(curTicker);
-  const s = $("star");
+  const on = inList("watch", curTicker), s = $("star");
   s.textContent = on ? "★" : "☆";
   s.classList.toggle("on", on);
   s.title = on ? "Remove from watchlist" : "Add to watchlist";
 }
-
-function toggleWatch(t, meta){
-  t = cleanTicker(t);
-  if(!t) return;
-  const w = getWatch();
-  const i = w.findIndex((x) => x.ticker === t);
-  if(i >= 0) w.splice(i, 1);
-  else w.unshift({ ticker: t, name: (meta && meta.name) || "", ts: Date.now() });
-  LS.set(WATCH_KEY, w.slice(0, WATCH_MAX));
-  renderRail();
-  updateStar();
+function updateTriage(){
+  const w = inList("watch", curTicker), r = inList("radar", curTicker);
+  $("tri-watch").textContent = (w ? "✓ " : "★ ") + "Watchlist"; $("tri-watch").classList.toggle("on", w);
+  $("tri-radar").textContent = (r ? "✓ " : "✦ ") + "Radar"; $("tri-radar").classList.toggle("on", r);
 }
 
-function renderRail(){
-  const w = getWatch();
-  $("railwrap").style.display = w.length ? "flex" : "none";
-  const rail = $("rail");
-  rail.replaceChildren();
-  w.forEach((item) => {
-    const chip = document.createElement("span");
-    chip.className = "chip";
-    const lab = document.createElement("span");
-    lab.textContent = item.ticker;
-    lab.title = item.name || item.ticker;
-    lab.addEventListener("click", () => { input.value = item.ticker; start(); });
-    const x = document.createElement("span");
-    x.className = "x"; x.textContent = "✕"; x.title = "Remove";
-    x.addEventListener("click", (e) => { e.stopPropagation(); toggleWatch(item.ticker); });
-    chip.append(lab, x);
-    rail.appendChild(chip);
-  });
-}
-
-// ---------- portfolio (per-row arithmetic only — never aggregates into a rating) ----------
+// ---------- book (holdings) ----------
 const getHoldings = () => LS.get(HOLD_KEY, []);
-
 function renderHoldings(){
-  const h = getHoldings();
-  $("hold-count").textContent = h.length ? "(" + h.length + ")" : "";
-  const px = LS.get(PX_KEY, {});
-  const tbl = $("hold-table");
+  const h = getHoldings(), meta = LS.get(META_KEY, {}), tbl = $("hold-table");
   tbl.replaceChildren();
   if(!h.length){
-    const e = document.createElement("div");
-    e.className = "hold-empty";
-    e.textContent = "No holdings yet. Add a ticker to track a position — this reviews each one on its own, it never scores your portfolio.";
-    tbl.appendChild(e);
-    return;
+    const e = document.createElement("div"); e.className = "empty";
+    e.textContent = "No holdings yet. Add a ticker above to track a position.";
+    tbl.appendChild(e); return;
   }
   let total = 0, haveTotal = false;
   h.forEach((row, i) => {
-    const cached = px[row.ticker];
-    const price = cached ? cached.price : null;
-    const cur = cached ? cached.currency : null;
+    const m = meta[row.ticker] || {}, price = m.price != null ? m.price : null, cur = m.currency;
     const value = (row.shares != null && price != null) ? row.shares * price : null;
     if(value != null){ total += value; haveTotal = true; }
-    const gainPct = (price != null && row.cost != null && row.cost > 0)
-      ? ((price - row.cost) / row.cost * 100) : null;
-
+    const gainPct = (price != null && row.cost != null && row.cost > 0) ? ((price - row.cost) / row.cost * 100) : null;
     const r = document.createElement("div"); r.className = "hrow";
     const tk = document.createElement("span"); tk.className = "h-tk"; tk.textContent = row.ticker;
     const pos = document.createElement("span"); pos.className = "h-pos";
-    pos.textContent = (row.shares != null ? row.shares + " sh" : "—")
-      + (row.cost != null ? " @ " + money(row.cost, cur) : "");
-    const now = document.createElement("span"); now.className = "h-now";
-    now.textContent = price != null ? "→ " + money(price, cur) : "→ run to price";
-    r.append(tk, pos, now);
-
-    const val = document.createElement("span"); val.className = "h-val";
-    val.textContent = value != null ? money(value, cur) : "";
-    r.append(val);
-    const g = document.createElement("span");
-    g.className = "h-gain" + (gainPct != null ? (gainPct >= 0 ? " up" : " down") : "");
+    pos.textContent = (row.shares != null ? row.shares + " sh" : "—") + (row.cost != null ? " @ " + money(row.cost, cur) : "");
+    const now = document.createElement("span"); now.className = "h-now"; now.textContent = price != null ? "→ " + money(price, cur) : "→ run to price";
+    const val = document.createElement("span"); val.className = "h-val"; val.textContent = value != null ? money(value, cur) : "";
+    const g = document.createElement("span"); g.className = "h-gain" + (gainPct != null ? (gainPct >= 0 ? " up" : " down") : "");
     g.textContent = gainPct != null ? (gainPct >= 0 ? "+" : "") + gainPct.toFixed(1) + "%" : "";
-    r.append(g);
-
     const rev = document.createElement("button"); rev.className = "h-review"; rev.textContent = "Review";
-    rev.addEventListener("click", () => { input.value = row.ticker; $("holdings").open = false; start(); });
+    rev.addEventListener("click", () => researchTicker(row.ticker));
     const x = document.createElement("button"); x.className = "h-x"; x.textContent = "✕"; x.title = "Remove";
-    x.addEventListener("click", () => { const a = getHoldings(); a.splice(i, 1); LS.set(HOLD_KEY, a); renderHoldings(); });
-    r.append(rev, x);
-    tbl.appendChild(r);
+    x.addEventListener("click", () => { const a = getHoldings(); a.splice(i, 1); LS.set(HOLD_KEY, a); renderHoldings(); refreshCounts(); });
+    r.append(tk, pos, now, val, g, rev, x); tbl.appendChild(r);
   });
   if(haveTotal){
     const t = document.createElement("div"); t.className = "h-total";
     const lab = document.createElement("span"); lab.textContent = "Total of priced holdings";
     const v = document.createElement("span"); v.className = "v"; v.textContent = money(total);
-    t.append(lab, v);
-    tbl.appendChild(t);
+    t.append(lab, v); tbl.appendChild(t);
   }
 }
-
 $("hold-form").addEventListener("submit", (e) => {
   e.preventDefault();
-  const t = cleanTicker($("h-ticker").value);
-  if(!t) return;
-  const shares = parseFloat($("h-shares").value);
-  const cost = parseFloat($("h-cost").value);
+  const t = cleanTicker($("h-ticker").value); if(!t) return;
+  const shares = parseFloat($("h-shares").value), cost = parseFloat($("h-cost").value);
   const h = getHoldings();
   h.push({ ticker: t, shares: isNaN(shares) ? null : shares, cost: isNaN(cost) ? null : cost });
   LS.set(HOLD_KEY, h);
   $("h-ticker").value = ""; $("h-shares").value = ""; $("h-cost").value = "";
-  renderHoldings();
+  renderHoldings(); refreshCounts();
 });
+
+// ---------- balance (descriptive sector mix of the book) ----------
+function renderBalance(){
+  const h = getHoldings(), meta = LS.get(META_KEY, {}), host = $("balance");
+  host.replaceChildren();
+  const bySector = {}; let total = 0, unpriced = 0;
+  h.forEach((row) => {
+    const m = meta[row.ticker] || {}, price = m.price;
+    if(row.shares == null || price == null){ unpriced++; return; }
+    const sec = m.sector || "Unclassified", val = row.shares * price;
+    bySector[sec] = (bySector[sec] || 0) + val; total += val;
+  });
+  if(total <= 0){
+    const e = document.createElement("div"); e.className = "empty";
+    e.innerHTML = "Add holdings in <b data-go='book'>Book</b> and run them so each gets a sector and a price — then your mix shows here.";
+    e.querySelector("b").addEventListener("click", () => showTab("book"));
+    host.appendChild(e); return;
+  }
+  const rows = Object.entries(bySector).sort((a, b) => b[1] - a[1]);
+  rows.forEach(([sec, val], i) => {
+    const pct = val / total * 100, color = SECTOR_COLORS[i % SECTOR_COLORS.length];
+    const r = document.createElement("div"); r.className = "brow";
+    const head = document.createElement("div"); head.className = "bhead";
+    const name = document.createElement("span"); name.className = "bsec"; name.textContent = sec;
+    const pc = document.createElement("span"); pc.className = "bpct"; pc.textContent = pct.toFixed(0) + "%";
+    head.append(name, pc);
+    const track = document.createElement("div"); track.className = "btrack";
+    const fill = document.createElement("div"); fill.className = "bfill"; fill.style.width = pct + "%"; fill.style.background = color;
+    track.append(fill);
+    const bv = document.createElement("div"); bv.className = "bval"; bv.textContent = money(val);
+    r.append(head, track, bv); host.appendChild(r);
+  });
+  const note = document.createElement("div"); note.className = "bnote";
+  note.textContent = "A description of where your book sits by sector, by position value — nothing more. "
+    + "No concentration score, no risk rating, no rebalancing advice. Sectors come from the last run of each name"
+    + (unpriced ? "; " + unpriced + " holding(s) aren't priced yet — research them to include." : ".");
+  host.appendChild(note);
+}
 
 // ---------- the live run ----------
 function start(){
-  const t = cleanTicker(input.value);
-  if(!t) return;
+  const t = cleanTicker(input.value); if(!t) return;
   reset();
-  curTicker = t;
-  valModel = null;
-  runBtn.disabled = true;
-  runBtn.textContent = "Meeting in session…";
-  ORDER.forEach(pendingCard);   // placeholders so the room feels alive while calls run
-
+  curTicker = t; valModel = null;
+  runBtn.disabled = true; runBtn.textContent = "Meeting in session…";
+  ORDER.forEach(pendingCard);
   es = new EventSource("/api/meeting?ticker=" + encodeURIComponent(t));
-
-  es.addEventListener("meta", (e) => {
-    const d = JSON.parse(e.data);
-    if(d.cached) showNotice(d.note || "Showing a saved run.");
-  });
-
-  // Arrives before the Valuation analyst's text, so the card picks it up when it fills.
+  es.addEventListener("meta", (e) => { const d = JSON.parse(e.data); if(d.cached) showNotice(d.note || "Showing a saved run."); });
+  es.addEventListener("profile", (e) => { renderProfile(JSON.parse(e.data)); });
   es.addEventListener("valuation_model", (e) => { valModel = JSON.parse(e.data); });
-
-  es.addEventListener("profile", (e) => {
-    const p = JSON.parse(e.data);
-    renderProfile(p);
-    if(p.price != null){   // remember the last live price so the holdings table can value this ticker
-      const px = LS.get(PX_KEY, {});
-      px[curTicker] = { price: p.price, currency: p.currency || null, ts: Date.now() };
-      LS.set(PX_KEY, px);
-      renderHoldings();
-    }
-  });
-
   es.addEventListener("analyst", (e) => { const d = JSON.parse(e.data); fillCard(d.name, d.view, d.error); });
   es.addEventListener("bear", (e) => { const d = JSON.parse(e.data); fillCard("Bear", d.view, d.error); });
-  es.addEventListener("error_msg", (e) => { const d = JSON.parse(e.data); showNotice(d.message || "Something went wrong."); });
-
+  es.addEventListener("error_msg", (e) => { showNotice(JSON.parse(e.data).message || "Something went wrong."); });
   es.addEventListener("done", (e) => {
     try { $("verdict-sub").textContent = JSON.parse(e.data).note || $("verdict-sub").textContent; } catch(_){}
+    updateTriage();
     verdict.classList.add("show");
     finish();
   });
-
   es.onerror = () => { if(es && es.readyState === 2) finish(); };
 }
-
-function finish(){
-  if(es){ es.close(); es = null; }
-  runBtn.disabled = false;
-  runBtn.textContent = "Hold the meeting";
-}
+function finish(){ if(es){ es.close(); es = null; } runBtn.disabled = false; runBtn.textContent = "Hold the meeting"; }
 
 // ---------- wiring ----------
+document.querySelectorAll(".tab").forEach((t) => t.addEventListener("click", () => showTab(t.dataset.tab)));
 runBtn.addEventListener("click", start);
 input.addEventListener("keydown", (e) => { if(e.key === "Enter") start(); });
-document.querySelectorAll(".hint b").forEach((b) => {
-  b.addEventListener("click", () => { input.value = b.dataset.t; start(); });
-});
-$("star").addEventListener("click", () => { toggleWatch(curTicker, { name: curProfile.name }); });
+document.querySelectorAll(".hint b").forEach((b) => b.addEventListener("click", () => { input.value = b.dataset.t; start(); }));
+$("star").addEventListener("click", () => { toggleList("watch", curTicker, { name: curProfile.name }); updateStar(); updateTriage(); });
+$("tri-watch").addEventListener("click", () => { toggleList("watch", curTicker, { name: curProfile.name }); updateStar(); updateTriage(); });
+$("tri-radar").addEventListener("click", () => { toggleList("radar", curTicker, { name: curProfile.name }); updateTriage(); });
 
-renderRail();
-renderHoldings();
+refreshCounts();
 input.focus();
 </script>
 </body>
