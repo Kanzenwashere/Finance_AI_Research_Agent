@@ -10,9 +10,18 @@ from research_firm.analysts import BEAR, DESK
 PROFILE = {"ticker": "TEST", "name": "Test Corp", "price": 100, "currency": "USD",
            "sector": "Technology", "summary": "A test company."}
 
+# A profile rich enough for the DCF to run (positive FCF + shares + capital structure).
+PROFILE_WITH_FCF = {**PROFILE, "free_cash_flow": 5.0e9, "shares_outstanding": 1.0e9,
+                    "total_debt": 1.0e9, "total_cash": 2.0e9, "market_cap": 1.0e11,
+                    "beta": 1.0, "revenue_growth": 0.08}
+
 
 def fake_fetch(_ticker: str) -> dict:
     return dict(PROFILE)
+
+
+def fake_fetch_with_fcf(_ticker: str) -> dict:
+    return dict(PROFILE_WITH_FCF)
 
 
 class _Msg:
@@ -89,6 +98,28 @@ def test_progress_events_emitted():
     seen: list[str] = []
     hold_meeting("TEST", client=client, fetch=fake_fetch, on_event=seen.append)
     assert "view:Bull" in seen and "error:Macro" in seen and "bear" in seen
+
+
+def test_dcf_is_attached_and_fed_only_to_valuation():
+    client = FakeClient()
+    m = hold_meeting("TEST", client=client, fetch=fake_fetch_with_fcf)
+    # the model is computed and attached to the meeting
+    assert m.valuation_model is not None and m.valuation_model["available"] is True
+    assert "value_low" in m.valuation_model and "value_high" in m.valuation_model
+    # the DCF block reaches the Valuation analyst's prompt...
+    val_call = next(c for c in client.calls if "Valuation analyst" in c["system"])
+    assert "Discounted-cash-flow model" in val_call["user"]
+    # ...and only it — the Bull never sees the model
+    bull_call = next(c for c in client.calls if "Bull analyst" in c["system"])
+    assert "Discounted-cash-flow model" not in bull_call["user"]
+
+
+def test_dcf_unavailable_when_profile_has_no_fcf():
+    client = FakeClient()
+    m = hold_meeting("TEST", client=client, fetch=fake_fetch)   # PROFILE has no free_cash_flow
+    assert m.valuation_model["available"] is False
+    val_call = next(c for c in client.calls if "Valuation analyst" in c["system"])
+    assert "not run" in val_call["user"]                        # told the DCF isn't applicable
 
 
 def test_on_analyst_streams_content_for_desk_and_bear():

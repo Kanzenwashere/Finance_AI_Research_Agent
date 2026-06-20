@@ -57,9 +57,14 @@ def test_keyless_request_serves_cached_run(monkeypatch):
         names = [e for e, _ in events]
         assert "meta" in names      # the "showing a saved run" marker
         assert "profile" in names
+        assert "valuation_model" in names   # the DCF model rides along
         assert names.count("analyst") >= 1
         assert "bear" in names
         assert names[-1] == "done"  # always closes cleanly
+        # the cached AAPL run carries a real DCF payload
+        import json as _json
+        vm = next(_json.loads(d) for e, d in events if e == "valuation_model")
+        assert vm["available"] is True and vm["value_low"] <= vm["value_high"]
 
 
 def test_empty_ticker_is_handled(monkeypatch):

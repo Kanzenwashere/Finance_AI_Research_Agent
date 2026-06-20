@@ -12,6 +12,11 @@
     "forward_pe": 29.1,
     "profit_margin": 0.246,
     "revenue_growth": 0.051,
+    "free_cash_flow": 100000000000.0,
+    "total_debt": 110000000000.0,
+    "total_cash": 65000000000.0,
+    "shares_outstanding": 14900000000.0,
+    "beta": 1.25,
     "summary": "Apple designs, manufactures and markets smartphones, personal computers, tablets, wearables and accessories, and sells a range of related services. Its products include iPhone, Mac, iPad, and wearables, home and accessories, alongside a Services segment spanning the App Store, advertising, cloud, payments and subscription content."
   },
   "views": {
@@ -22,5 +27,6 @@
   },
   "errors": {},
   "bear": "Strip the narrative and Apple is a ~5% revenue grower trading at a growth multiple, and the bull and valuation cases both quietly lean on two things that are not guaranteed. First, the iPhone supercycle that never fully arrives: 'AI will drive upgrades' has been the pitch through multiple launches, yet unit growth has been roughly flat-to-down and replacement cycles keep lengthening as phones get good enough — if the marquee upgrade reason underwhelms again, half of revenue stalls. Second, and more dangerous, the highest-quality dollars in the model are the most exposed: the Services growth the bull leans on is propped up by App Store take-rates the EU's DMA is actively forcing open, and by the ~$20B+ Google search payment that is almost pure operating profit and squarely in an antitrust ruling's path. Lose or haircut that payment and Services margins and growth both compress at exactly the valuation that assumes the opposite. Layer on China — a structurally weakening market and a single point of supply-chain failure facing tariffs and reshoring costs — and the downside is a high-margin grower de-rating to a low-margin grower's multiple while EPS support from buybacks slows. The single measurable thing a holder should watch: Services revenue growth — if it decelerates toward high-single-digits for two consecutive quarters, the entire re-rating thesis is breaking.",
-  "bear_error": null
+  "bear_error": null,
+  "valuation_model": {"available": true, "currency": "USD", "fcf": 100000000000.0, "net_debt": 45000000000.0, "shares": 14900000000.0, "discount_rate": 0.10341269113149847, "growth": 0.051, "terminal_growth": 0.025, "years": 10, "value_base": 94.43, "value_low": 72.1, "value_high": 133.85, "price": 211.45, "grid_discounts": [0.0884, 0.1034, 0.1184], "grid_growths": [0.03, 0.051, 0.081], "grid": [[107.78, 117.91, 133.85], [86.52, 94.45, 106.88], [72.1, 78.54, 88.63]]}
 }

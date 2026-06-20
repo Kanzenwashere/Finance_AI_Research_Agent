@@ -16,7 +16,7 @@ from typing import Any, Callable
 
 from anthropic import Anthropic
 
-from research_firm import market
+from research_firm import market, valuation
 from research_firm.analysts import BEAR, DESK, Analyst
 
 # Sonnet by default: a meeting fans out to several analyst calls plus the bear, so the mid-tier
@@ -38,6 +38,8 @@ class Meeting:
     errors: dict[str, str] = field(default_factory=dict)   # analyst name -> failure reason
     bear: str | None = None
     bear_error: str | None = None
+    # The DCF model handed to the Valuation analyst (a model with stated assumptions, not a verdict).
+    valuation_model: dict[str, Any] | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -47,6 +49,7 @@ class Meeting:
             "errors": self.errors,
             "bear": self.bear,
             "bear_error": self.bear_error,
+            "valuation_model": self.valuation_model,
         }
 
 
@@ -89,6 +92,12 @@ def hold_meeting(
     client = client or Anthropic()
     meeting = Meeting(ticker=ticker, profile=fetch(ticker))
 
+    # A real DCF (or None if FCF can't support one), computed once: it both feeds the Valuation
+    # analyst's context and is attached to the meeting for the UI to render.
+    dcf = valuation.discounted_cash_flow(meeting.profile)
+    meeting.valuation_model = valuation.public_dict(dcf)
+    dcf_block = valuation.format_dcf(dcf)
+
     def emit(tag: str) -> None:
         if on_event:
             try:
@@ -113,9 +122,11 @@ def hold_meeting(
         except Exception as err:  # noqa: BLE001 — per-analyst isolation: one failure never sinks the meeting
             return a.name, None, f"{type(err).__name__}: {err}"
 
-    # The desk argues in parallel — each analyst blind to the others.
+    # The desk argues in parallel — each analyst blind to the others. Only the Valuation analyst
+    # is handed the DCF model; the rest reason from the shared context.
     with cf.ThreadPoolExecutor(max_workers=len(DESK)) as pool:
-        futures = [pool.submit(run_analyst, a) for a in DESK]
+        futures = [pool.submit(run_analyst, a, dcf_block if a.name == "Valuation" else "")
+                   for a in DESK]
         for fut in cf.as_completed(futures):
             name, view, err = fut.result()
             if err:
@@ -128,9 +139,9 @@ def hold_meeting(
 
     # The bear runs last, fed the bull and valuation cases it must rebut.
     bull = meeting.views.get("Bull", "(no bull case was produced)")
-    valuation = meeting.views.get("Valuation", "(no valuation was produced)")
+    valuation_case = meeting.views.get("Valuation", "(no valuation was produced)")
     bear_brief = (f"The Bull case to attack:\n{bull}\n\n"
-                  f"The Valuation case to attack:\n{valuation}")
+                  f"The Valuation case to attack:\n{valuation_case}")
     name, view, err = run_analyst(BEAR, bear_brief)
     if err:
         meeting.bear_error = err

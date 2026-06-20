@@ -171,6 +171,26 @@ h1{font-family:'Fraunces',serif;font-size:34px;font-weight:500;letter-spacing:-.
 .body .mdh2{font-size:15px;font-weight:600}
 .body .mdh3{font-family:'IBM Plex Sans',sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:600;color:var(--ink-3);margin:18px 0 7px}
 
+/* ---------- DCF model panel (on the Valuation card) ---------- */
+.dcf{background:var(--bg);border:1px solid var(--hair);border-radius:13px;padding:14px 16px;margin-bottom:15px}
+.dcf-h{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:600;color:var(--ink-3);margin-bottom:10px}
+.dcf-tag{font-size:9.5px;letter-spacing:.5px;background:var(--surface-2);color:var(--ink-3);padding:2px 7px;border-radius:8px}
+.dcf-range{font-size:15px;color:var(--ink-2)}
+.dcf-range b{font-family:'IBM Plex Mono',monospace;color:var(--ink);font-weight:600;font-size:16px}
+.dcf-base{color:var(--ink-3);font-size:13px}
+.dcf-price{font-size:12.5px;color:var(--ink-3);margin-top:4px}
+.dcf-price .pos{font-weight:600}
+.dcf-price .above{color:var(--down)}.dcf-price .below{color:var(--up)}.dcf-price .within{color:var(--ink-2)}
+.dcf-assume{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-3);margin-top:10px;line-height:1.5}
+.dcf-grid{margin-top:12px;border-collapse:collapse;font-family:'IBM Plex Mono',monospace;font-size:11px}
+.dcf-grid caption{caption-side:top;text-align:left;font-family:'IBM Plex Sans',sans-serif;font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-4);font-weight:600;margin-bottom:5px}
+.dcf-grid th,.dcf-grid td{padding:4px 9px;text-align:right;color:var(--ink-2);white-space:nowrap}
+.dcf-grid th{color:var(--ink-3);font-weight:600}
+.dcf-grid th.corner{color:var(--ink-4);font-weight:500;text-align:left}
+.dcf-grid td.base{background:var(--surface-2);color:var(--ink);font-weight:600;border-radius:5px}
+.dcf-note{font-size:11px;color:var(--ink-4);margin-top:11px;line-height:1.5}
+.dcf-na{font-size:12.5px;color:var(--ink-3);font-style:italic}
+
 /* the live "thinking" placeholder card */
 .card.pending{border-left-color:var(--blue);opacity:.85}
 .card.pending .body{color:var(--ink-3)}
@@ -269,6 +289,7 @@ const profile = $("profile"), notice = $("notice"), verdict = $("verdict");
 let es = null;          // active EventSource
 let curTicker = "";     // ticker currently on screen
 let curProfile = {};    // its profile (for the watchlist star)
+let valModel = null;    // the DCF model for this run (shown on the Valuation card)
 
 // ---------- tiny localStorage wrapper (everything user-specific lives in the browser, no DB) ----------
 const LS = {
@@ -282,6 +303,13 @@ function money(n, cur){
   const c = cur && cur !== "USD" ? " " + cur : "";
   return "$" + Number(n).toLocaleString(undefined, {maximumFractionDigits:2, minimumFractionDigits:2}) + c;
 }
+function bigMoney(n){
+  if(n == null || isNaN(n)) return "n/a";
+  const a = Math.abs(n), sign = n < 0 ? "-" : "";
+  for(const [u, s] of [["T",1e12],["B",1e9],["M",1e6]]) if(a >= s) return sign + "$" + (a/s).toFixed(1) + u;
+  return sign + "$" + a.toFixed(0);
+}
+const pctOf = (x) => (x*100).toFixed(1) + "%";
 
 // ---------- markdown -> clean typography ----------
 // The model replies in Markdown. We escape every HTML-special char FIRST, then introduce only our
@@ -345,13 +373,83 @@ function roleEl(name){
   return role;
 }
 
+// The DCF panel that rides on top of the Valuation card. All values come from our own backend, but
+// it's built with textContent / typed DOM nodes regardless — no string-HTML.
+function dcfPanel(vm){
+  const wrap = document.createElement("div"); wrap.className = "dcf";
+  const h = document.createElement("div"); h.className = "dcf-h";
+  const ht = document.createElement("span"); ht.textContent = "Discounted cash flow";
+  const tag = document.createElement("span"); tag.className = "dcf-tag"; tag.textContent = "model, not a target";
+  h.append(ht, tag); wrap.append(h);
+
+  if(!vm || !vm.available){
+    const na = document.createElement("div"); na.className = "dcf-na";
+    na.textContent = "Not applicable here — no positive trailing free cash flow to discount.";
+    wrap.append(na); return wrap;
+  }
+  const cur = vm.currency;
+  const range = document.createElement("div"); range.className = "dcf-range";
+  const lab = document.createTextNode("Intrinsic value ");
+  const b = document.createElement("b"); b.textContent = money(vm.value_low, cur) + "–" + money(vm.value_high, cur);
+  const sh = document.createTextNode(" / share ");
+  const base = document.createElement("span"); base.className = "dcf-base"; base.textContent = "· base ~" + money(vm.value_base, cur);
+  range.append(lab, b, sh, base); wrap.append(range);
+
+  if(vm.price != null){
+    const where = vm.price < vm.value_low ? "below" : vm.price > vm.value_high ? "above" : "within";
+    const p = document.createElement("div"); p.className = "dcf-price";
+    p.append(document.createTextNode("Price " + money(vm.price, cur) + " sits "));
+    const w = document.createElement("span"); w.className = "pos " + where; w.textContent = where;
+    p.append(w, document.createTextNode(" the range."));
+    wrap.append(p);
+  }
+
+  const a = document.createElement("div"); a.className = "dcf-assume";
+  a.textContent = "FCF " + bigMoney(vm.fcf) + " · WACC " + pctOf(vm.discount_rate)
+    + " · growth " + pctOf(vm.growth) + "→" + pctOf(vm.terminal_growth) + " · " + vm.years + "y"
+    + " · net debt " + bigMoney(vm.net_debt);
+  wrap.append(a);
+
+  // sensitivity grid: discount (rows) x growth (cols) -> per-share value, base cell highlighted
+  if(vm.grid && vm.grid.length){
+    const t = document.createElement("table"); t.className = "dcf-grid";
+    const cap = document.createElement("caption"); cap.textContent = "value / share · discount × growth";
+    t.append(cap);
+    const head = document.createElement("tr");
+    const corner = document.createElement("th"); corner.className = "corner"; corner.textContent = "disc \\ grow";
+    head.append(corner);
+    vm.grid_growths.forEach((g) => { const th = document.createElement("th"); th.textContent = pctOf(g); head.append(th); });
+    t.append(head);
+    vm.grid.forEach((row, i) => {
+      const tr = document.createElement("tr");
+      const rh = document.createElement("th"); rh.textContent = pctOf(vm.grid_discounts[i]); tr.append(rh);
+      row.forEach((v, j) => {
+        const td = document.createElement("td");
+        if(i === 1 && j === 1) td.className = "base";          // centre cell = base assumptions
+        td.textContent = money(v, cur);
+        tr.append(td);
+      });
+      t.append(tr);
+    });
+    wrap.append(t);
+  }
+
+  const note = document.createElement("div"); note.className = "dcf-note";
+  note.textContent = "Whole-company two-stage DCF on trailing free cash flow, with stated assumptions you can argue with. A range, not a price target. Not investment advice.";
+  wrap.append(note);
+  return wrap;
+}
+
 function fillCard(name, view, error){
   const el = cardFor(name);
   el.className = "card " + name.toLowerCase() + (error ? " err" : "");
   const body = document.createElement("div"); body.className = "body";
   if(error) body.textContent = "Unavailable — " + error;        // plain text for the failure note
   else body.innerHTML = renderMarkdown(view || "");             // safe: escaped, then our tags only
-  el.replaceChildren(roleEl(name), body);
+  const parts = [roleEl(name)];
+  if(name === "Valuation" && valModel) parts.push(dcfPanel(valModel));   // model above the prose
+  parts.push(body);
+  el.replaceChildren(...parts);
 }
 
 function pendingCard(name){
@@ -497,6 +595,7 @@ function start(){
   if(!t) return;
   reset();
   curTicker = t;
+  valModel = null;
   runBtn.disabled = true;
   runBtn.textContent = "Meeting in session…";
   ORDER.forEach(pendingCard);   // placeholders so the room feels alive while calls run
@@ -507,6 +606,9 @@ function start(){
     const d = JSON.parse(e.data);
     if(d.cached) showNotice(d.note || "Showing a saved run.");
   });
+
+  // Arrives before the Valuation analyst's text, so the card picks it up when it fills.
+  es.addEventListener("valuation_model", (e) => { valModel = JSON.parse(e.data); });
 
   es.addEventListener("profile", (e) => {
     const p = JSON.parse(e.data);

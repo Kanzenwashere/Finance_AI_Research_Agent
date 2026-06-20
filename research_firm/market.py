@@ -34,6 +34,12 @@ def snapshot(ticker: str) -> dict[str, Any]:
             "forward_pe": info.get("forwardPE"),
             "profit_margin": info.get("profitMargins"),
             "revenue_growth": info.get("revenueGrowth"),
+            # Inputs for the DCF model (all best-effort; None when Yahoo doesn't have them).
+            "free_cash_flow": info.get("freeCashflow"),
+            "total_debt": info.get("totalDebt"),
+            "total_cash": info.get("totalCash"),
+            "shares_outstanding": info.get("sharesOutstanding"),
+            "beta": info.get("beta"),
             "summary": (info.get("longBusinessSummary") or "")[:700],
         }
     except Exception:  # noqa: BLE001 — data is best-effort; a failure must not sink the meeting
@@ -72,6 +78,8 @@ def format_context(ticker: str, profile: dict[str, Any]) -> str:
         f"Market cap: {money(profile.get('market_cap'))}",
         f"Trailing P/E: {profile.get('trailing_pe') or 'n/a'} | Forward P/E: {profile.get('forward_pe') or 'n/a'}",
         f"Profit margin: {pct(profile.get('profit_margin'))} | Revenue growth: {pct(profile.get('revenue_growth'))}",
+        f"Free cash flow (trailing): {money(profile.get('free_cash_flow'))} | "
+        f"Total debt: {money(profile.get('total_debt'))} | Cash: {money(profile.get('total_cash'))}",
         f"Business: {profile.get('summary') or 'n/a'}",
     ]
     return "\n".join(rows)

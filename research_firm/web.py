@@ -29,7 +29,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 
-from research_firm import market
+from research_firm import market, valuation
 from research_firm.analysts import DESK
 from research_firm.engine import DEFAULT_MODEL, hold_meeting
 
@@ -129,6 +129,8 @@ async def _replay_cached(ticker: str, reason: str):
     data = _load_example(ticker)
     yield _sse("meta", {"cached": True, "reason": reason, "note": _cached_note(reason)})
     yield _sse("profile", data.get("profile") or {"ticker": ticker})
+    if data.get("valuation_model"):
+        yield _sse("valuation_model", data["valuation_model"])
     await asyncio.sleep(_REPLAY_DELAY)
     views = data.get("views") or {}
     errors = data.get("errors") or {}
@@ -163,6 +165,9 @@ async def _run_live(ticker: str, model: str):
         try:
             profile = market.snapshot(ticker)
             push("profile", profile or {"ticker": ticker})
+            # Compute the DCF from the same profile the meeting will use, and stream it so the
+            # Valuation card can show the model as the debate runs.
+            push("valuation_model", valuation.public_dict(valuation.discounted_cash_flow(profile or {})))
             hold_meeting(ticker, model=model, fetch=lambda _t: profile, on_analyst=on_analyst)
             push("done", {"note": _DONE_NOTE})
         except Exception:  # noqa: BLE001 — never let a live failure error the stream; degrade to cached

@@ -12,6 +12,11 @@
     "forward_pe": 33.6,
     "profit_margin": 0.552,
     "revenue_growth": 1.224,
+    "free_cash_flow": 60000000000.0,
+    "total_debt": 10000000000.0,
+    "total_cash": 38000000000.0,
+    "shares_outstanding": 24600000000.0,
+    "beta": 1.70,
     "summary": "NVIDIA provides graphics, compute and networking solutions. Its Compute & Networking segment includes data-center accelerated computing platforms, networking, automotive and robotics; its Graphics segment includes GeForce GPUs for gaming and the professional visualization and software platforms built around CUDA."
   },
   "views": {
@@ -22,5 +27,6 @@
   },
   "errors": {},
   "bear": "The bull case and the valuation case both rest on treating a capex-funded boom as a secular plateau, and that is the flaw. NVIDIA's revenue is downstream of a handful of hyperscalers spending unprecedented sums on AI infrastructure before the returns on that spend are proven — that is the textbook setup for a cyclical peak dressed as a secular trend. The moment a major customer's earnings call frames AI capex as 'digesting' or 'optimizing,' orders that took quarters to ramp can be cut in a single guide, and a company priced for sustained triple-digit growth does not need a collapse to break — merely a deceleration. Worse, the same hyperscalers writing the checks are NVIDIA's most motivated competitors: every one of them is funding custom inference silicon specifically to escape paying 70%+ gross margins, and inference is the larger long-run market. So the two pillars are linked time bombs — concentrated, discretionary demand on one side, and the customers themselves attacking the margin on the other — while supply hangs on a single foundry's packaging line inside a geopolitical fault zone, and export controls have already amputated China. At ~34x forward earnings, a move from triple-digit to merely-good growth re-rates the multiple and cuts the estimate simultaneously; that's how a 'reasonable' forward P/E halves. The single measurable thing a holder should watch: data-center revenue sequential (quarter-over-quarter) growth — the first flat-to-down sequential print, or the first hyperscaler capex guide-down, is the thesis breaking in real time.",
-  "bear_error": null
+  "bear_error": null,
+  "valuation_model": {"available": true, "currency": "USD", "fcf": 60000000000.0, "net_debt": -28000000000.0, "shares": 24600000000.0, "discount_rate": 0.12774456193353476, "growth": 0.15, "terminal_growth": 0.025, "years": 10, "value_base": 40.24, "value_low": 31.35, "value_high": 47.57, "price": 134.7, "grid_discounts": [0.1127, 0.1277, 0.1427], "grid_growths": [0.12, 0.15, 0.15], "grid": [[42.52, 47.57, 47.57], [36.1, 40.26, 40.26], [31.35, 34.84, 34.84]]}
 }
