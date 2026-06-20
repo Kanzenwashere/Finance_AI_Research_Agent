@@ -55,7 +55,7 @@ h1{font-family:'Fraunces',serif;font-size:34px;font-weight:500;letter-spacing:-.
 
 /* ---------- watchlist rail ---------- */
 .railwrap{display:none;align-items:center;gap:9px;flex-wrap:wrap;margin:0 0 4px}
-.rail-cap{font-size:11px;letter-spacing:.5px;text-transform:uppercase;font-weight:600;color:var(--ink-3)}
+.rail-cap{font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:600;color:var(--ink-3)}
 .rail{display:flex;gap:7px;flex-wrap:wrap}
 .chip{display:inline-flex;align-items:center;gap:7px;background:var(--surface-2);border:1px solid var(--hair);
   border-radius:11px;padding:5px 8px 5px 11px;font-family:'IBM Plex Mono',monospace;font-size:12px;
@@ -116,13 +116,6 @@ h1{font-family:'Fraunces',serif;font-size:34px;font-weight:500;letter-spacing:-.
 .hold-empty{color:var(--ink-3);font-size:13px;padding:6px 0 2px;line-height:1.5}
 .hold-note{font-size:11.5px;color:var(--ink-4);margin-top:12px;line-height:1.5}
 
-/* ---------- shared-snapshot banner ---------- */
-.snapbanner{display:none;align-items:center;justify-content:space-between;gap:12px;background:var(--blue-soft);
-  border:1px solid var(--blue);border-radius:13px;padding:11px 14px;margin:18px 0 4px;font-size:13px;color:var(--ink);font-weight:500}
-.snapbanner.show{display:flex}
-.snapbanner button{background:var(--blue-deep);color:#fbf6ea;border:none;border-radius:10px;padding:7px 12px;
-  font-family:inherit;font-weight:600;font-size:12px;cursor:pointer;white-space:nowrap}
-
 /* ---------- notices ---------- */
 .notice{display:none;align-items:center;gap:9px;background:var(--warn-soft);
   border:1px solid var(--warn);border-radius:13px;padding:11px 14px;margin:18px 0 4px;
@@ -146,13 +139,13 @@ h1{font-family:'Fraunces',serif;font-size:34px;font-weight:500;letter-spacing:-.
 /* ---------- analyst cards ---------- */
 .cards{display:flex;flex-direction:column;gap:13px;margin-top:18px}
 .card{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);
-  padding:18px var(--pad);border-left:3px solid var(--hair);
+  padding:20px var(--pad);border-left:3px solid var(--hair);
   animation:rise .45s cubic-bezier(.2,.7,.3,1) both}
 @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.card .role{display:flex;align-items:center;gap:9px;margin-bottom:9px}
-.card .role .name{font-family:'Fraunces',serif;font-size:17px;font-weight:600;letter-spacing:-.2px}
+.card .role{display:flex;align-items:baseline;gap:9px;margin-bottom:12px}
+.card .role .name{font-family:'Fraunces',serif;font-size:18px;font-weight:600;letter-spacing:-.2px}
 .card .role .job{font-size:11.5px;color:var(--ink-3);font-weight:500}
-.card .body{font-size:14.5px;color:var(--ink-2);line-height:1.62;white-space:pre-wrap}
+.card .body{font-size:14.5px;color:var(--ink-2);line-height:1.62}
 .card.err .body{color:var(--ink-3);font-style:italic}
 .card.bull{border-left-color:var(--up)}
 .card.valuation{border-left-color:var(--blue)}
@@ -160,6 +153,23 @@ h1{font-family:'Fraunces',serif;font-size:34px;font-weight:500;letter-spacing:-.
 .card.checklist{border-left-color:var(--ink-4)}
 .card.bear{border-left:3px solid var(--down);background:var(--down-soft)}
 .card.bear .name{color:#9c5f44}
+
+/* rich-text rendering of the analyst markdown (clean typography, no raw # or ** or ---) */
+.body > :first-child{margin-top:0}
+.body > :last-child{margin-bottom:0}
+.body p{margin:0 0 11px}
+.body strong{color:var(--ink);font-weight:600}
+.body em{font-style:italic}
+.body ul,.body ol{margin:8px 0 12px;padding-left:20px}
+.body li{margin:4px 0}
+.body li::marker{color:var(--ink-4)}
+.body blockquote{margin:11px 0;padding:3px 0 3px 14px;border-left:2px solid var(--hair);color:var(--ink-2)}
+.body code{font-family:'IBM Plex Mono',monospace;font-size:.9em;background:var(--surface-2);padding:1px 5px;border-radius:5px}
+.body hr{border:none;border-top:1px solid var(--hair-soft);margin:14px 0}
+.body .mdh{font-family:'Fraunces',serif;color:var(--ink);line-height:1.25;margin:16px 0 8px;letter-spacing:-.2px}
+.body .mdh1{font-size:17px;font-weight:600}
+.body .mdh2{font-size:15px;font-weight:600}
+.body .mdh3{font-family:'IBM Plex Sans',sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:600;color:var(--ink-3);margin:18px 0 7px}
 
 /* the live "thinking" placeholder card */
 .card.pending{border-left-color:var(--blue);opacity:.85}
@@ -175,9 +185,6 @@ h1{font-family:'Fraunces',serif;font-size:34px;font-weight:500;letter-spacing:-.
 .verdict.show{display:block}
 .verdict .big{font-family:'Fraunces',serif;font-size:22px;font-weight:500;letter-spacing:-.3px}
 .verdict .sub{font-size:13px;color:var(--ink-3);margin-top:7px}
-.verdict .share{display:none;margin:16px auto 0;background:var(--surface-2);border:1px solid var(--hair);
-  border-radius:11px;padding:8px 16px;font-family:inherit;font-weight:600;font-size:13px;color:var(--ink-2);cursor:pointer;transition:.15s}
-.verdict .share:hover{border-color:var(--blue);color:var(--ink)}
 
 footer{margin-top:34px;font-size:12px;color:var(--ink-3);line-height:1.6}
 footer b{color:var(--ink-2);font-weight:600}
@@ -221,11 +228,6 @@ footer a:hover{text-decoration:underline}
   </div>
 </details>
 
-<div class="snapbanner" id="snapbanner">
-  <span>Viewing a shared snapshot — not a live run.</span>
-  <button id="snap-clear">Run your own →</button>
-</div>
-
 <div class="notice" id="notice"><span class="dot"></span><span id="notice-text"></span></div>
 
 <div class="profile" id="profile">
@@ -241,7 +243,6 @@ footer a:hover{text-decoration:underline}
 <div class="verdict" id="verdict">
   <div class="big serif">No verdict. No rating.</div>
   <div class="sub" id="verdict-sub">The strongest case each way is above — the decision is yours.</div>
-  <button class="share" id="share">Copy share link</button>
 </div>
 
 <footer>
@@ -266,9 +267,8 @@ const $ = (id) => document.getElementById(id);
 const input = $("ticker"), runBtn = $("run"), cards = $("cards");
 const profile = $("profile"), notice = $("notice"), verdict = $("verdict");
 let es = null;          // active EventSource
-let current = null;     // the meeting object assembled from the live stream (for sharing)
 let curTicker = "";     // ticker currently on screen
-let mode = "live";      // "live" | "shared"
+let curProfile = {};    // its profile (for the watchlist star)
 
 // ---------- tiny localStorage wrapper (everything user-specific lives in the browser, no DB) ----------
 const LS = {
@@ -283,14 +283,47 @@ function money(n, cur){
   return "$" + Number(n).toLocaleString(undefined, {maximumFractionDigits:2, minimumFractionDigits:2}) + c;
 }
 
-// ---------- render helpers shared by live + replay ----------
+// ---------- markdown -> clean typography ----------
+// The model replies in Markdown. We escape every HTML-special char FIRST, then introduce only our
+// own small, known set of tags — so the rendered output is styled, never raw "#"/"**"/"---", and a
+// stray "<" in the text can't become live markup.
+// Escape & and < (so no tag can form — a "<" is the only way to open one); leave ">" literal so a
+// blockquote's leading ">" survives to be parsed below. Content stays inert either way.
+function esc(t){ return (t || "").replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+function mdInline(s){
+  return s
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, "$1<em>$2</em>")
+    .replace(/(^|[^_])_([^_\n]+)_(?!_)/g, "$1<em>$2</em>")
+    .replace(/`([^`]+)`/g, "<code>$1</code>");
+}
+function renderMarkdown(text){
+  const lines = esc(text).split(/\r?\n/);
+  let html = "", list = null, para = [];
+  const closeList = () => { if(list){ html += "</" + list + ">"; list = null; } };
+  const flushPara = () => { if(para.length){ html += "<p>" + mdInline(para.join(" ")) + "</p>"; para = []; } };
+  for(const raw of lines){
+    const line = raw.trim();
+    if(!line){ flushPara(); closeList(); continue; }
+    if(/^(-{3,}|\*{3,}|_{3,})$/.test(line)){ flushPara(); closeList(); html += "<hr>"; continue; }
+    let m;
+    if((m = line.match(/^(#{1,6})\s+(.*)$/))){ flushPara(); closeList(); const lvl = Math.min(m[1].length, 3); html += '<div class="mdh mdh' + lvl + '">' + mdInline(m[2]) + "</div>"; continue; }
+    if((m = line.match(/^[-*]\s+(.*)$/))){ flushPara(); if(list !== "ul"){ closeList(); html += "<ul>"; list = "ul"; } html += "<li>" + mdInline(m[1]) + "</li>"; continue; }
+    if((m = line.match(/^\d+[.)]\s+(.*)$/))){ flushPara(); if(list !== "ol"){ closeList(); html += "<ol>"; list = "ol"; } html += "<li>" + mdInline(m[1]) + "</li>"; continue; }
+    if((m = line.match(/^>\s?(.*)$/))){ flushPara(); closeList(); html += "<blockquote>" + mdInline(m[1]) + "</blockquote>"; continue; }
+    para.push(line);
+  }
+  flushPara(); closeList();
+  return html;
+}
+
+// ---------- render helpers ----------
 function reset(){
   if(es){ es.close(); es = null; }
   cards.innerHTML = "";
   profile.classList.remove("show");
   notice.classList.remove("show");
   verdict.classList.remove("show");
-  $("share").style.display = "none";
 }
 
 function cardFor(name){
@@ -304,36 +337,36 @@ function cardFor(name){
   return el;
 }
 
-// `name` is always one of our fixed seats; `view`/`error` may be untrusted (shared link), so the
-// body goes in via textContent — never innerHTML — which makes script/tag injection impossible.
-function fillCard(name, view, error){
-  const el = cardFor(name);
-  el.className = "card " + name.toLowerCase() + (error ? " err" : "");
+function roleEl(name){
   const role = document.createElement("div"); role.className = "role";
   const nm = document.createElement("span"); nm.className = "name serif"; nm.textContent = name;
   const job = document.createElement("span"); job.className = "job"; job.textContent = JOBS[name] || "";
   role.append(nm, job);
+  return role;
+}
+
+function fillCard(name, view, error){
+  const el = cardFor(name);
+  el.className = "card " + name.toLowerCase() + (error ? " err" : "");
   const body = document.createElement("div"); body.className = "body";
-  body.textContent = error ? ("Unavailable — " + error) : (view || "");
-  el.replaceChildren(role, body);
+  if(error) body.textContent = "Unavailable — " + error;        // plain text for the failure note
+  else body.innerHTML = renderMarkdown(view || "");             // safe: escaped, then our tags only
+  el.replaceChildren(roleEl(name), body);
 }
 
 function pendingCard(name){
   const el = cardFor(name);
   el.className = "card pending " + name.toLowerCase();
-  const role = document.createElement("div"); role.className = "role";
-  const nm = document.createElement("span"); nm.className = "name serif"; nm.textContent = name;
-  const job = document.createElement("span"); job.className = "job"; job.textContent = JOBS[name] || "";
-  role.append(nm, job);
   const dots = document.createElement("div"); dots.className = "body dots";
   dots.innerHTML = "<span></span><span></span><span></span>";
-  el.replaceChildren(role, dots);
+  el.replaceChildren(roleEl(name), dots);
 }
 
 function showNotice(text){ $("notice-text").textContent = text; notice.classList.add("show"); }
 
 function renderProfile(p){
   curTicker = cleanTicker(p.ticker || curTicker);
+  curProfile = p || {};
   $("p-tk").textContent = curTicker;
   $("p-nm").textContent = p.name || "";
   $("p-px").textContent = money(p.price, p.currency);
@@ -458,64 +491,11 @@ $("hold-form").addEventListener("submit", (e) => {
   renderHoldings();
 });
 
-// ---------- share / replay (stateless: the whole meeting rides in the URL #hash, no backend) ----------
-function encodeMeeting(m){
-  const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(m))));
-  return b64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-}
-function decodeMeeting(s){
-  s = s.replace(/-/g, "+").replace(/_/g, "/");
-  return JSON.parse(decodeURIComponent(escape(atob(s))));
-}
-
-$("share").addEventListener("click", () => {
-  if(!current) return;
-  const code = encodeMeeting(current);
-  if(code.length > 20000){ showNotice("This run is a little large to share by link."); return; }
-  const url = location.origin + location.pathname + "#m=" + code;
-  const flash = () => { const b = $("share"); const o = b.textContent; b.textContent = "Link copied ✓"; setTimeout(() => (b.textContent = o), 1800); };
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(url).then(flash).catch(() => { location.hash = "#m=" + code; window.prompt("Copy this share link:", url); });
-  } else { location.hash = "#m=" + code; window.prompt("Copy this share link:", url); }
-});
-
-function replayMeeting(m){
-  mode = "shared";
-  reset();
-  current = m;
-  renderProfile(m.profile && typeof m.profile === "object" ? m.profile : { ticker: m.ticker });
-  ORDER.forEach((name) => {
-    if(m.views && typeof m.views[name] === "string") fillCard(name, m.views[name], null);
-    else if(m.errors && typeof m.errors[name] === "string") fillCard(name, null, m.errors[name]);
-  });
-  if(typeof m.bear === "string") fillCard("Bear", m.bear, null);
-  else if(typeof m.bear_error === "string") fillCard("Bear", null, m.bear_error);
-  verdict.classList.add("show");
-  $("share").style.display = "block";
-  $("snapbanner").classList.add("show");
-}
-
-function tryReplayFromHash(){
-  const h = location.hash || "";
-  if(!h.startsWith("#m=")) return false;
-  let m;
-  try { m = decodeMeeting(h.slice(3)); } catch(_){ return false; }
-  if(!m || typeof m !== "object" || !m.ticker) return false;
-  replayMeeting(m);
-  return true;
-}
-
 // ---------- the live run ----------
 function start(){
   const t = cleanTicker(input.value);
   if(!t) return;
-  if(mode === "shared"){
-    mode = "live";
-    $("snapbanner").classList.remove("show");
-    if(location.hash) history.replaceState(null, "", location.pathname + location.search);
-  }
   reset();
-  current = null;
   curTicker = t;
   runBtn.disabled = true;
   runBtn.textContent = "Meeting in session…";
@@ -531,7 +511,6 @@ function start(){
   es.addEventListener("profile", (e) => {
     const p = JSON.parse(e.data);
     renderProfile(p);
-    current = { ticker: curTicker, profile: p, views: {}, errors: {}, bear: null, bear_error: null };
     if(p.price != null){   // remember the last live price so the holdings table can value this ticker
       const px = LS.get(PX_KEY, {});
       px[curTicker] = { price: p.price, currency: p.currency || null, ts: Date.now() };
@@ -540,27 +519,13 @@ function start(){
     }
   });
 
-  es.addEventListener("analyst", (e) => {
-    const d = JSON.parse(e.data);
-    fillCard(d.name, d.view, d.error);
-    if(current){ if(d.error) current.errors[d.name] = d.error; else current.views[d.name] = d.view; }
-  });
-
-  es.addEventListener("bear", (e) => {
-    const d = JSON.parse(e.data);
-    fillCard("Bear", d.view, d.error);
-    if(current){ current.bear = d.view || null; current.bear_error = d.error || null; }
-  });
-
-  es.addEventListener("error_msg", (e) => {
-    const d = JSON.parse(e.data);
-    showNotice(d.message || "Something went wrong.");
-  });
+  es.addEventListener("analyst", (e) => { const d = JSON.parse(e.data); fillCard(d.name, d.view, d.error); });
+  es.addEventListener("bear", (e) => { const d = JSON.parse(e.data); fillCard("Bear", d.view, d.error); });
+  es.addEventListener("error_msg", (e) => { const d = JSON.parse(e.data); showNotice(d.message || "Something went wrong."); });
 
   es.addEventListener("done", (e) => {
     try { $("verdict-sub").textContent = JSON.parse(e.data).note || $("verdict-sub").textContent; } catch(_){}
     verdict.classList.add("show");
-    if(current) $("share").style.display = "block";
     finish();
   });
 
@@ -579,16 +544,11 @@ input.addEventListener("keydown", (e) => { if(e.key === "Enter") start(); });
 document.querySelectorAll(".hint b").forEach((b) => {
   b.addEventListener("click", () => { input.value = b.dataset.t; start(); });
 });
-$("star").addEventListener("click", () => {
-  const p = (current && current.profile) || {};
-  toggleWatch(curTicker, { name: p.name });
-});
-$("snap-clear").addEventListener("click", () => { location.hash = ""; location.reload(); });
-window.addEventListener("hashchange", () => { tryReplayFromHash(); });
+$("star").addEventListener("click", () => { toggleWatch(curTicker, { name: curProfile.name }); });
 
 renderRail();
 renderHoldings();
-if(!tryReplayFromHash()) input.focus();
+input.focus();
 </script>
 </body>
 </html>

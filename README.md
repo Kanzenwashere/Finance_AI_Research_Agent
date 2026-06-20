@@ -80,8 +80,6 @@ storage):
 - **Watchlist** — ⭐ any ticker to pin it to a rail; click to re-run its meeting.
 - **Holdings** — track positions and see per-holding value and naive cost-basis gain/loss. It
   reviews each holding on its own and deliberately **never scores, rates, or ranks the portfolio**.
-- **Share a run** — encode a completed meeting into the URL (`#…`) for a paste-able, backend-free
-  link that replays the exact debate. Shared content renders as inert text, never executed.
 
 ## Deploy your own
 
