@@ -77,6 +77,17 @@ def test_search_endpoint(monkeypatch):
         assert body["results"][0] == {"symbol": "AAPL", "name": "Apple Inc.", "exchange": "NASDAQ"}
 
 
+def test_prices_endpoint(monkeypatch):
+    monkeypatch.setattr(web, "_quote",
+                        lambda t: None if t == "BAD" else
+                        {"price": 100.0, "currency": "USD", "name": t + " Inc.", "sector": "Tech"})
+    with TestClient(web.app) as client:
+        q = client.get("/api/prices?tickers=AAPL,BAD,MSFT").json()["quotes"]
+        assert q["AAPL"]["price"] == 100.0 and q["MSFT"]["sector"] == "Tech"
+        assert "BAD" not in q                       # tickers with no price are skipped
+        assert client.get("/api/prices?tickers=").json()["quotes"] == {}
+
+
 def test_empty_ticker_is_handled(monkeypatch):
     monkeypatch.setattr(web, "_REPLAY_DELAY", 0.0)
     with TestClient(web.app) as client:

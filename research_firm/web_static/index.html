@@ -346,8 +346,8 @@ function showTab(name){
   document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("on", t.dataset.tab === name));
   if(name === "watchlist") renderList("watch");
   if(name === "radar") renderList("radar");
-  if(name === "book") renderHoldings();
-  if(name === "balance") renderBalance();
+  if(name === "book"){ renderHoldings(); priceHoldings(renderHoldings); }
+  if(name === "balance"){ renderBalance(); priceHoldings(renderBalance); }
   window.scrollTo(0, 0);
 }
 
@@ -632,6 +632,24 @@ function collapseHoldings(h){
   }
   return out;
 }
+// Price any holdings we don't have a price for yet — straight from the market feed, no meeting.
+// Also fills name + sector, so the Book values and the Balance mix fill in on their own.
+async function priceHoldings(after){
+  const meta = LS.get(META_KEY, {});
+  const need = [...new Set(getHoldings().map((x) => x.ticker))].filter((t) => !(meta[t] && meta[t].price != null));
+  if(!need.length) return;
+  try{
+    const r = await fetch("/api/prices?tickers=" + encodeURIComponent(need.join(",")));
+    const d = await r.json();
+    const m = LS.get(META_KEY, {});
+    for(const [t, q] of Object.entries(d.quotes || {})){
+      m[t] = { ...(m[t] || {}), name: q.name || (m[t] || {}).name || "", sector: q.sector || (m[t] || {}).sector || null,
+               price: q.price, currency: q.currency || null, ts: Date.now() };
+    }
+    LS.set(META_KEY, m);
+    if(after) after();
+  }catch(_){ /* leave holdings unpriced; the box still works */ }
+}
 function renderHoldings(){
   let h = getHoldings();
   const collapsed = collapseHoldings(h);
@@ -678,7 +696,7 @@ $("hold-form").addEventListener("submit", (e) => {
   h.push({ ticker: t, shares: isNaN(shares) ? null : shares, cost: isNaN(cost) ? null : cost });
   LS.set(HOLD_KEY, collapseHoldings(h));   // merge into an existing position instead of duplicating
   $("h-ticker").value = ""; $("h-shares").value = ""; $("h-cost").value = "";
-  renderHoldings(); refreshCounts();
+  renderHoldings(); refreshCounts(); priceHoldings(renderHoldings);   // price the new holding right away
 });
 
 // ---------- balance ----------

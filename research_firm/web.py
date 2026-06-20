@@ -125,6 +125,16 @@ def _yahoo_search(q: str) -> list[dict[str, Any]]:
     return out
 
 
+def _quote(ticker: str) -> dict[str, Any] | None:
+    """A price-only snapshot for one ticker (also returns name + sector so the Book and Balance
+    views can fill in without ever running a meeting). None if no price is available."""
+    p = market.snapshot(ticker) or {}
+    if p.get("price") is None:
+        return None
+    return {"price": p.get("price"), "currency": p.get("currency"),
+            "name": p.get("name") or "", "sector": p.get("sector")}
+
+
 # --------------------------------------------------------------------------- SSE helpers
 def _sse(event: str, data: dict[str, Any]) -> str:
     return f"event: {event}\ndata: {json.dumps(data, ensure_ascii=False)}\n\n"
@@ -237,6 +247,20 @@ async def search(q: str = "") -> JSONResponse:
             _SEARCH_CACHE.clear()
         _SEARCH_CACHE[key] = cached
     return JSONResponse({"results": cached})
+
+
+@app.get("/api/prices")
+async def prices(tickers: str = "") -> JSONResponse:
+    """Price (and name/sector) for a handful of tickers — lets the Book value holdings without a
+    meeting. Free (the market feed, not the model), concurrent, and graceful per ticker."""
+    syms = [s.strip().upper() for s in (tickers or "").split(",") if s.strip()][:25]
+    quotes: dict[str, Any] = {}
+    if syms:
+        results = await asyncio.gather(*[asyncio.to_thread(_quote, s) for s in syms])
+        for sym, q in zip(syms, results):
+            if q:
+                quotes[sym] = q
+    return JSONResponse({"quotes": quotes})
 
 
 @app.get("/")
