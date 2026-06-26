@@ -1,5 +1,7 @@
 # Finance AI Research Agent
 
+**Live demo:** https://web-production-52074.up.railway.app/
+
 **A multi-agent investment research desk that argues a stock from every side — and refuses to give you a rating.**
 
 Point it at a ticker. A panel of analyst agents — **Bull, Valuation, Macro, and a quality
